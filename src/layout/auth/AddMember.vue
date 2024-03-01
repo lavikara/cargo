@@ -46,6 +46,7 @@
           label="Invite Link"
           placeHolder="Invite Link"
           type="url"
+          :copy="true"
           :disabled="true"
         />
       </div>
@@ -67,7 +68,7 @@
         @valid="updateValidResult"
       />
       <Btn
-        class="tw-mt-8"
+        class="tw-mt-12"
         title="Finish Setup"
         :btnStyle="baseStore.blueBtn"
         :disabled="baseStore.btnLoading"
