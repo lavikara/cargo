@@ -5,7 +5,9 @@
         Add your team members
       </h3>
       <p class="tw-text-sm tw-mb-8">Invite your team members to join you.</p>
-      <div class="tw-border tw-border-gray tw-rounded-2xl tw-p-6">
+      <div
+        class="tw-border tw-border-gray tw-rounded-2xl tw-px-2 tw-py-6 lg:tw-px-6"
+      >
         <div class="tw-flex tw-items-center">
           <svg
             width="44"
@@ -32,7 +34,7 @@
               stroke-linecap="round"
             />
           </svg>
-          <div>
+          <div class="tw-ml-4">
             <h3 class="tw-max-w-xs tw-font-semibold tw-text-xl">Invite Link</h3>
             <p class="tw-text-sm">
               Share this link to invite your team members

@@ -4,7 +4,7 @@
       <div
         class="md:tw-grid md:tw-grid-cols-2 tw-px-4 xs:tw-px-8 md:tw-px-0 xl:tw-pl-20"
       >
-        <div class="md:tw-w-[20rem] lg:tw-w-[26rem] md:tw-mx-auto">
+        <div class="md:tw-w-[22rem] lg:tw-w-[26rem] md:tw-mx-auto">
           <img
             class="tw-max-w-[12rem] tw-pt-20"
             src="@/assets/img/cargostation.png"
