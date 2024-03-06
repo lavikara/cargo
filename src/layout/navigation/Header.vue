@@ -5,7 +5,7 @@
   >
     <div class="left">
       <img
-        src="@/assets/img/logo.png"
+        src="@/assets/img/logo.svg"
         class="tw-h-[30px] tw-cursor-pointer tw-ml-8"
         alt="tegs"
         loading="lazy"
