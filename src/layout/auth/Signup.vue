@@ -1,7 +1,9 @@
 <template>
   <div id="signup-layout">
     <div class="tw-pb-20 tw-mt-16">
-      <h3 class="tw-max-w-xs tw-font-semibold tw-text-xl tw-mb-4">
+      <h3
+        class="tw-max-w-xs tw-font-semibold tw-text-xl lg:tw-text-2xl tw-mb-4"
+      >
         CargoStation,Connecting Worlds, Faster and Smarter.
       </h3>
       <p class="tw-text-sm">
@@ -27,9 +29,10 @@
           id="password"
           label="Password"
           placeHolder="Password"
-          type="password"
+          :type="passwordInputType"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
+          @showPassword="showPassword"
           @set="setPassword"
           @valid="updateValidResult"
         />
@@ -67,6 +70,7 @@ const baseStore = useBaseStore();
 const validResults = ref([{ email: false, password: false }]);
 const formValid = ref(false);
 const payload = ref({});
+const passwordInputType = ref("password");
 
 const login = () => {
   setTimeout(async () => {
@@ -101,6 +105,21 @@ const updateValidResult = (payload) => {
       break;
   }
   setFormValid();
+};
+
+const showPassword = (payload) => {
+  switch (payload.type) {
+    case "password":
+      passwordInputType.value = "text";
+      break;
+
+    case "text":
+      passwordInputType.value = "password";
+      break;
+
+    default:
+      break;
+  }
 };
 </script>
 

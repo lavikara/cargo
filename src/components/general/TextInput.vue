@@ -52,6 +52,7 @@
         viewBox="0 0 16 16"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        @click="emit('showPassword', { type: props.type })"
       >
         <g id="eye_mini">
           <g id="Union">
@@ -82,7 +83,7 @@ import { isNumber, emailValidation } from "@/utils/helpers";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const emit = defineEmits(["set", "valid"]);
+const emit = defineEmits(["set", "valid", "showPassword"]);
 
 const props = defineProps({
   inputValue: { type: String, default: () => "" },
