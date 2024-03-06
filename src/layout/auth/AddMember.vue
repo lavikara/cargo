@@ -1,7 +1,9 @@
 <template>
   <div id="add-member-layout">
     <div class="tw-pb-20 tw-mt-16">
-      <h3 class="tw-max-w-xs tw-font-semibold tw-text-xl tw-mb-4">
+      <h3
+        class="tw-max-w-xs tw-font-semibold tw-text-xl lg:tw-text-2xl tw-mb-4"
+      >
         Add your team members
       </h3>
       <p class="tw-text-sm tw-mb-8">Invite your team members to join you.</p>
