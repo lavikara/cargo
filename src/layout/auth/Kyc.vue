@@ -1,6 +1,6 @@
 <template>
   <div id="kyc-layout">
-    <div class="tw-pb-20 tw-mt-16">
+    <div class="tw-mt-16">
       <h3
         class="tw-max-w-xs tw-font-semibold tw-text-xl lg:tw-text-2xl tw-mb-4"
       >
@@ -171,7 +171,7 @@ const addKyc = () => {
 };
 
 const setName = (text) => {
-  payload.value.username = text;
+  payload.value.name = text;
 };
 
 const setCompanyName = (text) => {
@@ -192,6 +192,7 @@ const setCountry = (text) => {
 
 const setTeamSize = (size) => {
   teamSize.value = size;
+  payload.value.team_size = size;
 };
 
 const updateValidResult = (payload) => {
