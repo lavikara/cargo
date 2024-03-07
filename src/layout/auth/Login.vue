@@ -77,7 +77,7 @@ const login = () => {
 };
 
 const setEmail = (text) => {
-  payload.value.username = text;
+  payload.value.email = text;
 };
 
 const setPassword = (text) => {
