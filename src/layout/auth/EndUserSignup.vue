@@ -18,6 +18,7 @@
           id="fullname"
           label="Full Name"
           placeHolder="John Doe"
+          type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
           @set="setFullname"
