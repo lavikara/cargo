@@ -1,6 +1,6 @@
 <template>
   <div id="auth-view">
-    <div class="tw-h-screen tw-overflow-hidden">
+    <div>
       <div
         class="lg:tw-grid lg:tw-grid-cols-2 tw-px-4 xs:tw-px-8 lg:tw-px-0 xxxxl:tw-pl-40"
       >
