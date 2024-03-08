@@ -1,6 +1,6 @@
 <template>
   <div id="auth-view">
-    <div class="">
+    <div>
       <div
         class="lg:tw-grid lg:tw-grid-cols-2 tw-px-4 xs:tw-px-8 lg:tw-px-0 xxxxl:tw-pl-40"
       >
@@ -22,7 +22,7 @@
               route.name === 'Kyc' ||
               route.name === 'AddMember'
             "
-            class="container tw-flex tw-justify-between tw-py-20"
+            class="container tw-max-w-[18rem] tw-flex tw-justify-between tw-items-center tw-py-20 tw-mx-auto"
           >
             <label class="tw-flex tw-items-center">
               <input
@@ -32,8 +32,8 @@
                 disabled
               />
               <div
-                class="checkmark tw-w-[1.5rem] tw-h-[1.5rem] tw-relative tw-bg-white tw-border-2 tw-rounded-full tw-transition-all tw-duration-300"
-                :class="{ 'input-border tw-border-blue': kycStep1Active }"
+                class="checkmark tw-w-[1.5rem] tw-h-[1.5rem] tw-relative tw-bg-white tw-border-gray tw-border-2 tw-rounded-full tw-transition-all tw-duration-300"
+                :class="{ 'input-border !tw-border-blue': kycStep1Active }"
               ></div>
               <span
                 class="tw-text-gray tw-text-sm tw-ml-2"
@@ -44,6 +44,9 @@
                 >Step 1</span
               >
             </label>
+            <div
+              class="tw-w-[1rem] tw-border-gray tw-border-l-0 tw-border-r-0 tw-border-b-0 tw-border-t-2"
+            ></div>
             <label class="tw-flex tw-items-center">
               <input
                 class="tw-absolute tw-h-0 tw-w-0 tw-opacity-0"
@@ -52,8 +55,8 @@
                 disabled
               />
               <div
-                class="checkmark tw-w-[1.5rem] tw-h-[1.5rem] tw-relative tw-bg-white tw-border-2 tw-rounded-full tw-transition-all tw-duration-300"
-                :class="{ 'input-border tw-border-blue': kycStep2Active }"
+                class="checkmark tw-w-[1.5rem] tw-h-[1.5rem] tw-relative tw-bg-white tw-border-gray tw-border-2 tw-rounded-full tw-transition-all tw-duration-300"
+                :class="{ 'input-border !tw-border-blue': kycStep2Active }"
               ></div>
               <span
                 class="tw-text-gray tw-text-sm tw-ml-2"
@@ -64,6 +67,9 @@
                 >Step 2</span
               >
             </label>
+            <div
+              class="tw-w-[1rem] tw-border-gray tw-border-l-0 tw-border-r-0 tw-border-b-0 tw-border-t-2"
+            ></div>
             <label class="tw-flex tw-items-center">
               <input
                 class="tw-absolute tw-h-0 tw-w-0 tw-opacity-0"
@@ -72,8 +78,8 @@
                 disabled
               />
               <div
-                class="checkmark tw-w-[1.5rem] tw-h-[1.5rem] tw-relative tw-bg-white tw-border-2 tw-rounded-full tw-transition-all tw-duration-300"
-                :class="{ 'input-border tw-border-blue': kycStep3Active }"
+                class="checkmark tw-w-[1.5rem] tw-h-[1.5rem] tw-relative tw-bg-white tw-border-gray tw-border-2 tw-rounded-full tw-transition-all tw-duration-300"
+                :class="{ 'input-border !tw-border-blue': kycStep3Active }"
               ></div>
               <span
                 class="tw-text-gray tw-text-sm tw-ml-2"
@@ -95,14 +101,14 @@
             alt="cargo station"
           />
           <img
-            v-if="route.name === 'Signup'"
+            v-if="route.name === 'Signup' || route.name === 'EndUserSignup'"
             class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
             src="@/assets/img/signup.png"
             loading="lazy"
             alt="cargo station"
           />
           <img
-            v-if="route.name === 'Kyc'"
+            v-if="route.name === 'Kyc' || route.name === 'VerifyEmail'"
             class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
             src="@/assets/img/kyc.png"
             loading="lazy"
