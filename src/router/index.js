@@ -34,6 +34,15 @@ const router = createRouter({
             ),
         },
         {
+          path: "signup-tier3",
+          name: "EndUserSignup",
+          component: () =>
+            import(
+              /* webpackChunkName: "auth" */
+              "@/layout/auth/EndUserSignup.vue"
+            ),
+        },
+        {
           path: "kyc",
           name: "Kyc",
           component: () =>
@@ -58,6 +67,15 @@ const router = createRouter({
             import(
               /* webpackChunkName: "auth" */
               "@/layout/auth/ForgotPassword.vue"
+            ),
+        },
+        {
+          path: "verify-email",
+          name: "VerifyEmail",
+          component: () =>
+            import(
+              /* webpackChunkName: "auth" */
+              "@/layout/auth/VerifyEmail.vue"
             ),
         },
       ],

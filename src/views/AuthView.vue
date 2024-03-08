@@ -1,6 +1,6 @@
 <template>
   <div id="auth-view">
-    <div class="">
+    <div class="tw-h-screen tw-overflow-hidden">
       <div
         class="lg:tw-grid lg:tw-grid-cols-2 tw-px-4 xs:tw-px-8 lg:tw-px-0 xxxxl:tw-pl-40"
       >
@@ -101,14 +101,14 @@
             alt="cargo station"
           />
           <img
-            v-if="route.name === 'Signup'"
+            v-if="route.name === 'Signup' || route.name === 'EndUserSignup'"
             class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
             src="@/assets/img/signup.png"
             loading="lazy"
             alt="cargo station"
           />
           <img
-            v-if="route.name === 'Kyc'"
+            v-if="route.name === 'Kyc' || route.name === 'VerifyEmail'"
             class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
             src="@/assets/img/kyc.png"
             loading="lazy"
