@@ -23,7 +23,7 @@
               route.name === 'EndUserSignup' ||
               route.name === 'AddMember'
             "
-            class="container tw-max-w-[18rem] tw-flex tw-justify-between tw-items-center tw-py-20 tw-mx-auto"
+            class="container tw-max-w-[18rem] tw-flex tw-justify-between tw-items-center tw-py-16 tw-mx-auto"
           >
             <label class="tw-flex tw-items-center">
               <input
