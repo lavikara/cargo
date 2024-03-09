@@ -20,6 +20,7 @@
             v-if="
               route.name === 'Signup' ||
               route.name === 'Kyc' ||
+              route.name === 'EndUserSignup' ||
               route.name === 'AddMember'
             "
             class="container tw-max-w-[18rem] tw-flex tw-justify-between tw-items-center tw-py-20 tw-mx-auto"
@@ -143,6 +144,15 @@ const kycStep3Active = ref(false);
 const setStep = (routeName) => {
   switch (routeName) {
     case "Signup":
+      kycStep1.value = false;
+      kycStep2.value = false;
+      kycStep3.value = false;
+      kycStep1Active.value = true;
+      kycStep2Active.value = false;
+      kycStep3Active.value = false;
+      break;
+
+    case "EndUserSignup":
       kycStep1.value = false;
       kycStep2.value = false;
       kycStep3.value = false;

@@ -1,6 +1,6 @@
 <template>
   <div id="signup-enduser-layout">
-    <div class="tw-pb-20 tw-mt-16">
+    <div class="tw-mt-16">
       <h3
         class="tw-max-w-xs tw-font-semibold tw-text-xl lg:tw-text-2xl tw-mb-4"
       >
