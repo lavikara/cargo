@@ -11,7 +11,7 @@
         are designed to meet your specific requirements.
       </p>
       <h3 class="tw-font-semibold tw-text-xl tw-mt-8 tw-mb-8">Sign Up</h3>
-      <form @submit.prevent="login">
+      <form @submit.prevent="signup">
         <TextInput
           name="email"
           id="email"
@@ -72,7 +72,7 @@ const formValid = ref(false);
 const payload = ref({});
 const passwordInputType = ref("password");
 
-const login = () => {
+const signup = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
   }, 500);
