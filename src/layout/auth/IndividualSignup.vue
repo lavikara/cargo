@@ -116,7 +116,7 @@ const signup = () => {
     return;
   }
 
-  if (!payload.value?.password) {
+  if (!payload.value?.password || payload.value?.password.length < 8) {
     console.log("Password is required");
     return;
   }

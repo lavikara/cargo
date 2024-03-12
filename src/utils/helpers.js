@@ -1,4 +1,6 @@
 // import * as CryptoJS from "crypto-js";
+import { useAuthStore } from "@/stores/authStore";
+import { useBaseStore } from "@/stores/baseStore";
 
 export const isNumber = (evt) => {
   evt = evt ? evt : window.event;
@@ -120,6 +122,42 @@ export const removeDash = (value) => {
   const splitValue = value.split("-");
   if (splitValue.length === 1) return splitValue;
   return splitValue.join(" ");
+};
+
+export const validateEmail = (email) => {
+  if (!email) return false;
+
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
+export const validatePassword = (password) => {
+  const baseStore = useBaseStore();
+
+  if (!password) {
+    baseStore.showToast({
+      description: "Please enter password",
+      display: true,
+      type: "error",
+    });
+
+    return false;
+  }
+
+  if (password.length < 8) {
+    baseStore.showToast({
+      description: "Please enter password of 8 characters",
+      display: true,
+      type: "error",
+    });
+
+    return false;
+  }
+
+  return true;
 };
 
 // export const encryptPayload = (formData) => {
