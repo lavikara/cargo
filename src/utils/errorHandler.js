@@ -3,6 +3,8 @@ import { useBaseStore } from "@/stores/baseStore";
 
 export default {
   handleError(error) {
+    console.log("error from handler");
+    console.log(error.response);
     const authStore = useAuthStore();
     const baseStore = useBaseStore();
 

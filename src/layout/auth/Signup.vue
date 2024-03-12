@@ -42,7 +42,7 @@
           :btnStyle="baseStore.blueBtn"
           :disabled="baseStore.btnLoading"
           :loading="baseStore.btnLoading"
-          @click="router.push({ name: 'Kyc' })"
+          @click="signup"
         />
         <div class="tw-flex tw-justify-center tw-items-center tw-mt-8">
           <span class="tw-text-sm xxs:tw-mr-6">Already have an account?</span>
@@ -62,6 +62,10 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
+import { useAuthStore } from "@/stores/authStore.js";
+
+const authStore = useAuthStore();
+
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
 
@@ -72,18 +76,31 @@ const formValid = ref(false);
 const payload = ref({});
 const passwordInputType = ref("password");
 
-const signup = () => {
-  setTimeout(async () => {
-    if (!formValid.value) return;
-  }, 500);
-};
-
 const setEmail = (text) => {
-  payload.value.username = text;
+  payload.value.email = text;
 };
 
 const setPassword = (text) => {
   payload.value.password = text;
+};
+
+const signup = () => {
+  if (!payload.value?.email) {
+    console.log("Email is required");
+    return;
+  }
+
+  if (!payload.value?.password) {
+    console.log("Password is required");
+    return;
+  }
+
+  console.log("Submitting...");
+
+  authStore.register({ ...payload.value, tierType: 1 });
+  // setTimeout(async () => {
+  //   if (!formValid.value) return;
+  // }, 500);
 };
 
 const setFormValid = () => {

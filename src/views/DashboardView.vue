@@ -1,10 +1,11 @@
 <template>
   <div id="dashboard-view">
-    <MobileSidebar class="xl:tw-hidden" />
-    <TopHeader />
-    <Sidebar class="tw-hidden xl:tw-block" />
-    <div class="view-container">
+    <!-- <MobileSidebar class="xl:tw-hidden" /> -->
+    <!-- <TopHeader /> -->
+    <!-- <Sidebar class="tw-hidden xl:tw-block" /> -->
+    <!-- <div class="view-container">
       <div class="tw-pt-28 tw-min-h-screen">
+        <p>A View</p>
         <router-view v-slot="{ Component }">
           <transition name="fade-transform" mode="out-in">
             <div class="main tw-py-6 tw-px-4 lg:tw-px-8 xl:tw-px-">
@@ -13,7 +14,8 @@
           </transition>
         </router-view>
       </div>
-    </div>
+    </div> -->
+    <p>Dashboard</p>
   </div>
 </template>
 

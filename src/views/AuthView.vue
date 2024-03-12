@@ -20,7 +20,7 @@
             v-if="
               route.name === 'Signup' ||
               route.name === 'Kyc' ||
-              route.name === 'EndUserSignup' ||
+              route.name === 'IndividualSignup' ||
               route.name === 'AddMember'
             "
             class="container tw-max-w-[18rem] tw-flex tw-justify-between tw-items-center tw-py-16 tw-mx-auto"
@@ -102,7 +102,7 @@
             alt="cargo station"
           />
           <img
-            v-if="route.name === 'Signup' || route.name === 'EndUserSignup'"
+            v-if="route.name === 'Signup' || route.name === 'IndividualSignup'"
             class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
             src="@/assets/img/signup.png"
             loading="lazy"
@@ -152,7 +152,7 @@ const setStep = (routeName) => {
       kycStep3Active.value = false;
       break;
 
-    case "EndUserSignup":
+    case "IndividualSignup":
       kycStep1.value = false;
       kycStep2.value = false;
       kycStep3.value = false;

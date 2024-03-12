@@ -115,14 +115,26 @@
             @set="setCountry"
           />
         </div>
+        <TextInput
+          class="tw-mt-4"
+          name="city"
+          id="city"
+          label="City"
+          placeHolder="City/town"
+          type="text"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @set="setCity"
+          @valid="updateValidResult"
+        />
         <Btn
           class="tw-mt-8"
           title="Create Account"
           :btnStyle="baseStore.blueBtn"
           :disabled="baseStore.btnLoading"
           :loading="baseStore.btnLoading"
-          @click="router.push({ name: 'AddMember' })"
         />
+        <!-- @click="router.push({ name: 'AddMember' })" -->
       </form>
     </div>
   </div>
@@ -132,10 +144,15 @@
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
+import { useAuthStore } from "@/stores/authStore.js";
+
+const authStore = useAuthStore();
+
 import countryRegionData from "@/utils/js/countryRegionData.js";
 import TextInput from "@/components/general/TextInput.vue";
 import SelectInput from "@/components/general/SelectInput.vue";
 import Btn from "@/components/general/Btn.vue";
+import { getItem } from "@/utils/storage";
 
 const router = useRouter();
 const baseStore = useBaseStore();
@@ -165,34 +182,79 @@ const stateList = computed(() => {
 });
 
 const addKyc = () => {
-  setTimeout(async () => {
-    if (!formValid.value) return;
-  }, 500);
+  if (!payload.value?.fullName) {
+    console.log("fullName is required");
+    return;
+  }
+
+  if (!payload.value?.companyName) {
+    console.log("companyName is required");
+    return;
+  }
+
+  if (!payload.value?.companyWebsite) {
+    console.log("companyWebsite is required");
+    return;
+  }
+
+  if (!payload.value?.teamSize) {
+    console.log("teamSize is required");
+    return;
+  }
+
+  if (!payload.value?.state) {
+    console.log("state is required");
+    return;
+  }
+
+  if (!payload.value?.country) {
+    console.log("country is required");
+    return;
+  }
+
+  if (!payload.value?.city) {
+    console.log("City is required");
+    return;
+  }
+
+  console.log("Submitting kyc...");
+  console.log(payload.value);
+  const userId = getItem("userId");
+  console.log("userId");
+  console.log(userId);
+  authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
+  // setTimeout(async () => {
+  //   if (!formValid.value) return;
+  // }, 500);
 };
 
 const setName = (text) => {
-  payload.value.name = text;
+  payload.value.fullName = text;
 };
 
 const setCompanyName = (text) => {
-  payload.value.password = text;
+  payload.value.companyName = text;
 };
 
 const setCompanyWebsite = (text) => {
-  payload.value.password = text;
+  payload.value.companyWebsite = text;
+};
+
+const setTeamSize = (size) => {
+  teamSize.value = size;
+  payload.value.teamSize = size;
 };
 
 const setState = (text) => {
-  payload.value.password = text;
+  payload.value.state = text;
 };
 
 const setCountry = (text) => {
   payload.value.country = text;
 };
 
-const setTeamSize = (size) => {
-  teamSize.value = size;
-  payload.value.team_size = size;
+const setCity = (text) => {
+  payload.value.city = text;
 };
 
 const updateValidResult = (payload) => {
@@ -207,7 +269,7 @@ const updateValidResult = (payload) => {
     default:
       break;
   }
-  setFormValid();
+  // setFormValid();
 };
 </script>
 

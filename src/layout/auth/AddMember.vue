@@ -77,6 +77,11 @@
         :btnStyle="baseStore.blueBtn"
         :disabled="baseStore.btnLoading"
         :loading="baseStore.btnLoading"
+        @click="
+          {
+            router.replace({ name: 'Login' });
+          }
+        "
       />
       <div class="tw-flex tw-justify-center tw-items-center tw-mt-4">
         <router-link

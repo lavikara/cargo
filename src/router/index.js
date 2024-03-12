@@ -34,12 +34,12 @@ const router = createRouter({
             ),
         },
         {
-          path: "signup-tier3",
-          name: "EndUserSignup",
+          path: "signup/individual",
+          name: "IndividualSignup",
           component: () =>
             import(
               /* webpackChunkName: "auth" */
-              "@/layout/auth/EndUserSignup.vue"
+              "@/layout/auth/IndividualSignup.vue"
             ),
         },
         {

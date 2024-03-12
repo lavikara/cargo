@@ -61,8 +61,12 @@
 <script setup>
 import { ref } from "vue";
 import { useBaseStore } from "@/stores/baseStore.js";
+import { useAuthStore } from "@/stores/authStore.js";
+
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
+
+const authStore = useAuthStore();
 
 const baseStore = useBaseStore();
 const validResults = ref([{ email: false, password: false }]);
@@ -73,6 +77,8 @@ const passwordInputType = ref("password");
 const login = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
+
+    authStore.login(payload.value);
   }, 500);
 };
 

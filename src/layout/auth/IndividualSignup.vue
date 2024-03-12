@@ -14,8 +14,8 @@
       <h3 class="tw-font-semibold tw-text-xl tw-mt-8 tw-mb-8">Sign Up</h3>
       <form @submit.prevent="signup">
         <TextInput
-          name="fullname"
-          id="fullname"
+          name="fullName"
+          id="fullName"
           label="Full Name"
           placeHolder="John Doe"
           type="text"
@@ -57,7 +57,7 @@
           :btnStyle="baseStore.blueBtn"
           :disabled="baseStore.btnLoading"
           :loading="baseStore.btnLoading"
-          @click="router.push({ name: 'Kyc' })"
+          @click="signup"
         />
         <div class="tw-flex tw-justify-center tw-items-center tw-mt-8">
           <span class="tw-text-sm xxs:tw-mr-6">Already have an account?</span>
@@ -77,50 +77,81 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
+import { useAuthStore } from "@/stores/authStore.js";
+
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
 
 const router = useRouter();
 const baseStore = useBaseStore();
-const validResults = ref([{ email: false, password: false }]);
+const authStore = useAuthStore();
+const validResults = ref([{ email: false, password: false, fullName: false }]);
 const formValid = ref(false);
 const payload = ref({});
 const passwordInputType = ref("password");
 
-const signup = () => {
-  setTimeout(async () => {
-    if (!formValid.value) return;
-  }, 500);
-};
-
 const setFullname = (text) => {
-  payload.value.fullname = text;
+  payload.value.fullName = text;
 };
 
 const setEmail = (text) => {
-  payload.value.username = text;
+  payload.value.email = text;
 };
 
 const setPassword = (text) => {
   payload.value.password = text;
 };
 
+const signup = () => {
+  console.log("Sign up");
+  console.log(payload.value);
+
+  if (!payload.value?.fullName) {
+    console.log("fullName is required");
+    return;
+  }
+
+  if (!payload.value?.email) {
+    console.log("Email is required");
+    return;
+  }
+
+  if (!payload.value?.password) {
+    console.log("Password is required");
+    return;
+  }
+
+  authStore.registerIndividual({ ...payload.value, tierType: 3 });
+
+  // setTimeout(async () => {
+  //   console.log("formValid");
+  //   console.log(formValid.value);
+  //   if (!formValid.value) return;
+
+  //   console.log("Submitting...");
+
+  //   // authStore.registerIndividual({ ...payload.value, tierType: 3 });
+  // }, 500);
+};
+
 const setFormValid = () => {
   formValid.value = validResults.value.some((result) => {
-    if (result.email === true && result.password === true) return true;
+    if (result.email === true && result.password === true && result.fullName) {
+      return true;
+    }
   });
 };
 
 const updateValidResult = (payload) => {
   switch (payload.type) {
+    case "fullName":
+      validResults.value.find((obj) => (obj.fullName = payload.value));
+      break;
     case "email":
       validResults.value.find((obj) => (obj.email = payload.value));
       break;
     case "password":
       validResults.value.find((obj) => (obj.password = payload.value));
-      break;
-    case "fullname":
-      validResults.value.find((obj) => (obj.fullname = payload.value));
       break;
 
     default:
