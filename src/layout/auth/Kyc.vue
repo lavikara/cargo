@@ -153,6 +153,7 @@ import TextInput from "@/components/general/TextInput.vue";
 import SelectInput from "@/components/general/SelectInput.vue";
 import Btn from "@/components/general/Btn.vue";
 import { getItem } from "@/utils/storage";
+import { validateTextInput, validateWebsite } from "@/utils/helpers";
 
 const router = useRouter();
 const baseStore = useBaseStore();
@@ -182,46 +183,53 @@ const stateList = computed(() => {
 });
 
 const addKyc = () => {
-  if (!payload.value?.fullName) {
-    console.log("fullName is required");
+  if (!validateTextInput(payload.value?.fullName, "full name")) {
     return;
   }
 
-  if (!payload.value?.companyName) {
-    console.log("companyName is required");
+  if (!validateTextInput(payload.value?.companyName, "company name", 5)) {
     return;
   }
 
-  if (!payload.value?.companyWebsite) {
-    console.log("companyWebsite is required");
+  if (!validateWebsite(payload.value?.companyWebsite)) {
     return;
   }
 
   if (!payload.value?.teamSize) {
-    console.log("teamSize is required");
-    return;
-  }
+    baseStore.showToast({
+      description: "Please select size of your team",
+      display: true,
+      type: "error",
+    });
 
-  if (!payload.value?.state) {
-    console.log("state is required");
     return;
   }
 
   if (!payload.value?.country) {
-    console.log("country is required");
+    baseStore.showToast({
+      description: "Country is required",
+      display: true,
+      type: "error",
+    });
+
     return;
   }
 
-  if (!payload.value?.city) {
-    console.log("City is required");
+  if (!payload.value?.state) {
+    baseStore.showToast({
+      description: "State is required",
+      display: true,
+      type: "error",
+    });
+
     return;
   }
 
-  console.log("Submitting kyc...");
-  console.log(payload.value);
+  if (!validateTextInput(payload.value?.city, "city")) {
+    return;
+  }
+
   const userId = getItem("userId");
-  console.log("userId");
-  console.log(userId);
   authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
   // setTimeout(async () => {
   //   if (!formValid.value) return;

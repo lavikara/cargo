@@ -124,22 +124,12 @@ export const removeDash = (value) => {
   return splitValue.join(" ");
 };
 
-export const validateEmail = (email) => {
-  if (!email) return false;
-
-  return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-};
-
-export const validatePassword = (password) => {
+export const validateTextInput = (text, name = "input", length = 3) => {
   const baseStore = useBaseStore();
 
-  if (!password) {
+  if (!text || text.length < length) {
     baseStore.showToast({
-      description: "Please enter password",
+      description: `Invalid ${name} format, a minimum of ${length} characters are required`,
       display: true,
       type: "error",
     });
@@ -147,9 +137,62 @@ export const validatePassword = (password) => {
     return false;
   }
 
-  if (password.length < 8) {
+  return true;
+};
+
+export const validateEmail = (email) => {
+  const baseStore = useBaseStore();
+
+  if (!email) {
+    return false;
+  }
+
+  const result = String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+
+  if (!result) {
     baseStore.showToast({
-      description: "Please enter password of 8 characters",
+      description: "Invalid Email",
+      display: true,
+      type: "error",
+    });
+  }
+
+  return true;
+};
+
+export const validatePassword = (password) => {
+  const baseStore = useBaseStore();
+
+  let pattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+
+  if (!password || password.length < 8 || !pattern.test(password)) {
+    baseStore.showToast({
+      description:
+        "Please enter password of 8 characters including letter, number, capital letter and special character",
+      display: true,
+      type: "error",
+    });
+
+    return false;
+  }
+
+  return true;
+};
+
+export const validateWebsite = (website) => {
+  const baseStore = useBaseStore();
+
+  let pattern =
+    /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
+
+  if (!pattern.test(website)) {
+    baseStore.showToast({
+      description: "Invalid website URL format",
       display: true,
       type: "error",
     });

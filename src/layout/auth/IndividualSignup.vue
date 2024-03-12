@@ -81,6 +81,11 @@ import { useAuthStore } from "@/stores/authStore.js";
 
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
+import {
+  validateEmail,
+  validatePassword,
+  validateTextInput,
+} from "@/utils/helpers";
 
 const router = useRouter();
 const baseStore = useBaseStore();
@@ -103,35 +108,19 @@ const setPassword = (text) => {
 };
 
 const signup = () => {
-  console.log("Sign up");
-  console.log(payload.value);
-
-  if (!payload.value?.fullName) {
-    console.log("fullName is required");
+  if (!validateTextInput(payload.value?.fullName, "full name")) {
     return;
   }
 
-  if (!payload.value?.email) {
-    console.log("Email is required");
+  if (!validateEmail(payload.value.email)) {
     return;
   }
 
-  if (!payload.value?.password || payload.value?.password.length < 8) {
-    console.log("Password is required");
+  if (!validatePassword(payload.value?.password)) {
     return;
   }
 
   authStore.registerIndividual({ ...payload.value, tierType: 3 });
-
-  // setTimeout(async () => {
-  //   console.log("formValid");
-  //   console.log(formValid.value);
-  //   if (!formValid.value) return;
-
-  //   console.log("Submitting...");
-
-  //   // authStore.registerIndividual({ ...payload.value, tierType: 3 });
-  // }, 500);
 };
 
 const setFormValid = () => {

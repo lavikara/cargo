@@ -80,6 +80,7 @@ const login = () => {
     console.log("Email is required");
     return;
   }
+
   if (!validatePassword(payload.value.password)) {
     console.log("password is required");
     return;
