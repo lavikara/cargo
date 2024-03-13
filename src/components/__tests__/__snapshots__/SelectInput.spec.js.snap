@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SelectInput > renders properly 1`] = `
+"<div id="select-input">
+  <div class="tw-relative tw-flex tw-flex-col"><label for="" class="tw-font-medium tw-whitespace-nowrap"></label><select class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-cursor-pointer focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1 select-appearance" name="" id="" required="">
+      <option disabled="" value=""></option>
+    </select><svg class="tw-absolute tw-right-2 tw-bottom-[1.3rem] tw-z-10" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4.99992 2.82901L7.82792 1.33514e-05L9.24292 1.41401L4.99992 5.65701L0.75692 1.41401L2.17192 1.33514e-05L4.99992 2.82901Z" fill="#4F5877"></path>
+    </svg></div>
+</div>"
+`;
+
+exports[`TextInput > renders properly 1`] = `
+"<div data-v-9344f502="" id="text-input">
+  <div data-v-9344f502="" class="tw-relative tw-flex tw-flex-col"><label data-v-9344f502="" for="" class="tw-font-medium tw-whitespace-nowrap"></label><input data-v-9344f502="" class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-transition-all tw-duration-300 focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1" type="text" placeholder="" required="" name="" id="">
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    <p data-v-9344f502="" class="tw-text-red tw-text-xs tw-absolute tw--bottom-4 tw-right-0"></p>
+  </div>
+</div>"
+`;
