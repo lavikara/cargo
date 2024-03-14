@@ -20,7 +20,6 @@
             v-if="
               route.name === 'Signup' ||
               route.name === 'Kyc' ||
-              route.name === 'IndividualSignup' ||
               route.name === 'AddMember'
             "
             class="container tw-max-w-[18rem] tw-flex tw-justify-between tw-items-center tw-py-16 tw-mx-auto"
@@ -96,28 +95,28 @@
         <div class="tw-hidden lg:tw-flex lg:tw-justify-end">
           <img
             v-if="route.name === 'Login'"
-            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
+            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-cover"
             src="@/assets/img/login.png"
             loading="lazy"
             alt="cargo station"
           />
           <img
             v-if="route.name === 'Signup' || route.name === 'IndividualSignup'"
-            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
+            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-cover"
             src="@/assets/img/signup.png"
             loading="lazy"
             alt="cargo station"
           />
           <img
             v-if="route.name === 'Kyc' || route.name === 'VerifyEmail'"
-            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
+            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-cover"
             src="@/assets/img/kyc.png"
             loading="lazy"
             alt="cargo station"
           />
           <img
             v-if="route.name === 'AddMember'"
-            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-fill"
+            class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-cover"
             src="@/assets/img/addmember.png"
             loading="lazy"
             alt="cargo station"

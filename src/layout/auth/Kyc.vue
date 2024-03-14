@@ -11,10 +11,10 @@
       </p>
       <form @submit.prevent="addKyc">
         <TextInput
-          name="yourName"
-          id="yourName"
-          label="Your Name"
-          placeHolder="Your Name"
+          name="fullName"
+          id="fullName"
+          label="Full Name"
+          placeHolder="John Doe"
           type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
@@ -35,11 +35,11 @@
         />
         <TextInput
           class="tw-mt-4"
-          name="companyWebsite"
-          id="companyWebsite"
+          name="website"
+          id="website"
           label="Company Website"
           placeHolder="Company Website"
-          type="url"
+          type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
           @set="setCompanyWebsite"
@@ -89,32 +89,28 @@
             </div>
           </div>
         </div>
-        <div class="tw-grid tw-grid-cols-4 tw-mt-4">
-          <SelectInput
-            class="tw-col-start-1 tw-col-end-4"
-            label="Location"
-            defaltOption="State"
-            name="location"
-            id="location"
-            :showLabel="true"
-            :leftSide="true"
-            :list="stateList"
-            :disabled="baseStore.btnLoading"
-            @set="setState"
-          />
-          <SelectInput
-            class="tw-col-start-4 tw-mt-6"
-            label="Country"
-            defaltOption="Country"
-            name="role"
-            id="role"
-            bgColor="gray"
-            :rightSide="true"
-            :list="countryList"
-            :disabled="baseStore.btnLoading"
-            @set="setCountry"
-          />
-        </div>
+        <SelectInput
+          class="tw-mt-4"
+          label="Country"
+          defaltOption="Country"
+          name="country"
+          id="country"
+          :showLabel="true"
+          :list="countryList"
+          :disabled="baseStore.btnLoading"
+          @set="setCountry"
+        />
+        <SelectInput
+          class="tw-mt-4"
+          label="State"
+          defaltOption="State"
+          name="location"
+          id="location"
+          :showLabel="true"
+          :list="stateList"
+          :disabled="stateInputDisabled"
+          @set="setState"
+        />
         <TextInput
           class="tw-mt-4"
           name="city"
@@ -145,20 +141,26 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
-
-const authStore = useAuthStore();
-
 import countryRegionData from "@/utils/js/countryRegionData.js";
 import TextInput from "@/components/general/TextInput.vue";
 import SelectInput from "@/components/general/SelectInput.vue";
 import Btn from "@/components/general/Btn.vue";
 import { getItem } from "@/utils/storage";
-import { validateTextInput, validateWebsite } from "@/utils/helpers";
 
 const router = useRouter();
+const authStore = useAuthStore();
 const baseStore = useBaseStore();
-const validResults = ref([{ email: false, password: false }]);
+const validResults = ref([
+  {
+    fullName: false,
+    companyName: false,
+    website: false,
+    teamSize: false,
+    city: false,
+  },
+]);
 const formValid = ref(false);
+const stateInputDisabled = ref(true);
 const payload = ref({});
 const teamSize = ref("");
 
@@ -177,63 +179,19 @@ const stateList = computed(() => {
       countryObj.regions.map((region) => {
         list.push(region.name);
       });
+      stateInputDisabled.value = false;
     }
   });
   return list;
 });
 
 const addKyc = () => {
-  if (!validateTextInput(payload.value?.fullName, "full name")) {
-    return;
-  }
-
-  if (!validateTextInput(payload.value?.companyName, "company name", 5)) {
-    return;
-  }
-
-  if (!validateWebsite(payload.value?.companyWebsite)) {
-    return;
-  }
-
-  if (!payload.value?.teamSize) {
-    baseStore.showToast({
-      description: "Please select size of your team",
-      display: true,
-      type: "error",
-    });
-
-    return;
-  }
-
-  if (!payload.value?.country) {
-    baseStore.showToast({
-      description: "Country is required",
-      display: true,
-      type: "error",
-    });
-
-    return;
-  }
-
-  if (!payload.value?.state) {
-    baseStore.showToast({
-      description: "State is required",
-      display: true,
-      type: "error",
-    });
-
-    return;
-  }
-
-  if (!validateTextInput(payload.value?.city, "city")) {
-    return;
-  }
-
-  const userId = getItem("userId");
-  authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
-  // setTimeout(async () => {
-  //   if (!formValid.value) return;
-  // }, 500);
+  setTimeout(async () => {
+    if (!formValid.value) return;
+    console.log(payload.value);
+    // const userId = getItem("userId");
+    // authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
+  }, 500);
 };
 
 const setName = (text) => {
@@ -251,6 +209,8 @@ const setCompanyWebsite = (text) => {
 const setTeamSize = (size) => {
   teamSize.value = size;
   payload.value.teamSize = size;
+  validResults.value[0].teamSize = true;
+  setFormValid();
 };
 
 const setState = (text) => {
@@ -265,19 +225,38 @@ const setCity = (text) => {
   payload.value.city = text;
 };
 
+const setFormValid = () => {
+  formValid.value = validResults.value.some((result) => {
+    if (
+      result.fullName === true &&
+      result.companyName === true &&
+      result.website === true &&
+      result.teamSize === true &&
+      result.city === true
+    )
+      return true;
+  });
+};
+
 const updateValidResult = (payload) => {
   switch (payload.type) {
-    case "email":
-      validResults.value.find((obj) => (obj.email = payload.value));
+    case "fullName":
+      validResults.value.find((obj) => (obj.fullName = payload.value));
       break;
-    case "password":
-      validResults.value.find((obj) => (obj.password = payload.value));
+    case "companyName":
+      validResults.value.find((obj) => (obj.companyName = payload.value));
+      break;
+    case "website":
+      validResults.value.find((obj) => (obj.website = payload.value));
+      break;
+    case "city":
+      validResults.value.find((obj) => (obj.city = payload.value));
       break;
 
     default:
       break;
   }
-  // setFormValid();
+  setFormValid();
 };
 </script>
 

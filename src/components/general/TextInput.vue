@@ -6,7 +6,7 @@
       </label>
       <input
         class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-transition-all tw-duration-300 focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1"
-        :class="{ 'tw-pl-24': type === 'url' }"
+        :class="{ '!tw-border-red': showError, 'tw-pl-24': name === 'website' }"
         @input="setInput"
         @keypress="type === 'number' || type === 'tel' ? isNumber($event) : ''"
         @keyup.enter="validate"
@@ -20,7 +20,7 @@
         v-model="textData"
       />
       <span
-        v-if="type === 'url'"
+        v-if="name === 'website'"
         class="tw-absolute tw-top-[1.82rem] tw-left-[0.05rem] tw-w-20 tw-text-gray tw-bg-gray-border tw-rounded-tl-2xl tw-rounded-bl-2xl tw-px-4 tw-py-[0.75rem]"
         :class="{ '!tw-top-[0.31rem] tw-left-[0.05rem]': !showLabel }"
       >
@@ -79,7 +79,7 @@
 
 <script setup>
 import { ref, watchEffect, onMounted } from "vue";
-import { isNumber, emailValidation } from "@/utils/helpers";
+import { isNumber, emailValidation, validateWebsite } from "@/utils/helpers";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -131,6 +131,25 @@ const clearTextData = (value) => {
 const validate = () => {
   if (textData.value?.length === 0) return;
   switch (props.type) {
+    case "text":
+      textDataValid.value = textData.value.trim().length;
+      if (textDataValid.value === null || textDataValid.value === 0) {
+        showError.value = true;
+        errorMsg.value = "Field can not be empty";
+        emit("valid", { type: props.name, value: false });
+      } else if (textDataValid.value < 3 && props.name !== "companyName") {
+        showError.value = true;
+        errorMsg.value = "At list three characters";
+        emit("valid", { type: props.name, value: false });
+      } else if (props.name === "website") {
+        urlValidation();
+      } else if (textDataValid.value !== null && props.name === "password") {
+        passwordValidation();
+      } else {
+        emit("valid", { type: props.name, value: true });
+      }
+      break;
+
     case "email":
       textDataValid.value = emailValidation(textData.value);
       if (textDataValid.value === null) {
@@ -154,66 +173,81 @@ const validate = () => {
       break;
 
     case "password":
-      textDataValid.value = textData.value.trim().length === 0;
-      if (textDataValid.value) {
-        emit("valid", { type: "password", value: false });
-        showError.value = true;
-        errorMsg.value = "Password is invalid";
-      } else if (!textDataValid.value && props.validatePassword === true) {
-        if (textData.value.length < 8) {
-          showError.value = true;
-          errorMsg.value = "minimum of eight characters";
-          emit("valid", { type: "hasEightOrMoreCharacters", value: false });
-        } else {
-          emit("valid", { type: "hasEightOrMoreCharacters", value: true });
-        }
-        if (textData.value.search(/[a-z]/) == -1) {
-          showError.value = true;
-          errorMsg.value = "At least one lower case letter";
-          emit("valid", { type: "hasLowerCase", value: false });
-        } else {
-          emit("valid", { type: "hasLowerCase", value: true });
-        }
-        if (textData.value.search(/[A-Z]/) == -1) {
-          showError.value = true;
-          errorMsg.value = "At least one upper case letter";
-          emit("valid", { type: "hasUpperCase", value: false });
-        } else {
-          emit("valid", { type: "hasUpperCase", value: true });
-        }
-        if (textData.value.search(/[0-9]/) == -1) {
-          showError.value = true;
-          errorMsg.value = "At least one number";
-          emit("valid", { type: "hasNumber", value: false });
-        } else {
-          emit("valid", { type: "hasNumber", value: true });
-        }
-        if (
-          textData.value.search(
-            /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).*$/
-          ) == -1
-        ) {
-          showError.value = true;
-          errorMsg.value = "At least one special character";
-          emit("valid", { type: "hasSpecialCharacters", value: false });
-        } else {
-          emit("valid", { type: "hasSpecialCharacters", value: true });
-        }
-      } else if (!textDataValid.value && props.passwordToConfirm.length > 0) {
-        if (textData.value !== props.passwordToConfirm) {
-          showError.value = true;
-          errorMsg.value = "Password doesn't match";
-          emit("valid", { type: "passwordMatch", value: false });
-        } else {
-          emit("valid", { type: "passwordMatch", value: true });
-        }
-      } else {
-        emit("valid", { type: "password", value: true });
-      }
+      passwordValidation();
       break;
 
     default:
       break;
+  }
+};
+
+const urlValidation = () => {
+  textDataValid.value = validateWebsite(textData.value);
+  if (textDataValid.value === null) {
+    showError.value = true;
+    errorMsg.value = "Url is invalid";
+    emit("valid", { type: "website", value: false });
+  } else {
+    emit("valid", { type: "website", value: true });
+  }
+};
+
+const passwordValidation = () => {
+  textDataValid.value = textData.value.trim().length === 0;
+  if (textDataValid.value) {
+    emit("valid", { type: "password", value: false });
+    showError.value = true;
+    errorMsg.value = "Password is invalid";
+  } else if (!textDataValid.value && props.validatePassword === true) {
+    if (textData.value.length < 8) {
+      showError.value = true;
+      errorMsg.value = "minimum of eight characters";
+      emit("valid", { type: "hasEightOrMoreCharacters", value: false });
+    } else {
+      emit("valid", { type: "hasEightOrMoreCharacters", value: true });
+    }
+    if (textData.value.search(/[a-z]/) == -1) {
+      showError.value = true;
+      errorMsg.value = "At least one lower case letter";
+      emit("valid", { type: "hasLowerCase", value: false });
+    } else {
+      emit("valid", { type: "hasLowerCase", value: true });
+    }
+    if (textData.value.search(/[A-Z]/) == -1) {
+      showError.value = true;
+      errorMsg.value = "At least one upper case letter";
+      emit("valid", { type: "hasUpperCase", value: false });
+    } else {
+      emit("valid", { type: "hasUpperCase", value: true });
+    }
+    if (textData.value.search(/[0-9]/) == -1) {
+      showError.value = true;
+      errorMsg.value = "At least one number";
+      emit("valid", { type: "hasNumber", value: false });
+    } else {
+      emit("valid", { type: "hasNumber", value: true });
+    }
+    if (
+      textData.value.search(
+        /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).*$/
+      ) == -1
+    ) {
+      showError.value = true;
+      errorMsg.value = "At least one special character";
+      emit("valid", { type: "hasSpecialCharacters", value: false });
+    } else {
+      emit("valid", { type: "hasSpecialCharacters", value: true });
+    }
+  } else if (!textDataValid.value && props.passwordToConfirm.length > 0) {
+    if (textData.value !== props.passwordToConfirm) {
+      showError.value = true;
+      errorMsg.value = "Password doesn't match";
+      emit("valid", { type: "passwordMatch", value: false });
+    } else {
+      emit("valid", { type: "passwordMatch", value: true });
+    }
+  } else {
+    emit("valid", { type: "password", value: true });
   }
 };
 

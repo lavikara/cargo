@@ -65,7 +65,6 @@ import { useAuthStore } from "@/stores/authStore.js";
 
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
-import { validateEmail, validatePassword } from "@/utils/helpers";
 
 const authStore = useAuthStore();
 
@@ -76,16 +75,6 @@ const payload = ref({});
 const passwordInputType = ref("password");
 
 const login = () => {
-  if (!validateEmail(payload.value.email)) {
-    console.log("Email is required");
-    return;
-  }
-
-  if (!validatePassword(payload.value.password)) {
-    console.log("password is required");
-    return;
-  }
-
   authStore.login(payload.value);
 
   // setTimeout(async () => {
