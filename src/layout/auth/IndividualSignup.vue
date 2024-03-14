@@ -229,6 +229,13 @@ const updateValidResult = (payload) => {
         (obj) => (obj.hasSpecialCharacters = payload.value)
       );
       break;
+    case "passwordReset":
+      validResults.value[0].hasLowerCase = false;
+      validResults.value[0].hasUpperCase = false;
+      validResults.value[0].hasNumber = false;
+      validResults.value[0].hasSpecialCharacters = false;
+      validResults.value[0].hasEightOrMoreCharacters = false;
+      break;
 
     default:
       break;

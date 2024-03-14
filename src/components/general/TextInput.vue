@@ -129,7 +129,7 @@ const clearTextData = (value) => {
 };
 
 const validate = () => {
-  if (textData.value?.length === 0) return;
+  if (textData.value?.length === 0 && props.type !== "password") return;
   switch (props.type) {
     case "text":
       textDataValid.value = textData.value.trim().length;
@@ -193,12 +193,13 @@ const urlValidation = () => {
 };
 
 const passwordValidation = () => {
-  textDataValid.value = textData.value.trim().length === 0;
-  if (textDataValid.value) {
+  textDataValid.value = textData.value.trim().length;
+  emit("valid", { type: "passwordReset", value: false });
+  if (textDataValid.value === 0 && textData.value.length > 0) {
     emit("valid", { type: "password", value: false });
     showError.value = true;
     errorMsg.value = "Password is invalid";
-  } else if (!textDataValid.value && props.validatePassword === true) {
+  } else if (textDataValid.value > 0 && props.validatePassword === true) {
     if (textData.value.length < 8) {
       showError.value = true;
       errorMsg.value = "minimum of eight characters";
@@ -238,7 +239,7 @@ const passwordValidation = () => {
     } else {
       emit("valid", { type: "hasSpecialCharacters", value: true });
     }
-  } else if (!textDataValid.value && props.passwordToConfirm.length > 0) {
+  } else if (textDataValid.value > 0 && props.passwordToConfirm.length > 0) {
     if (textData.value !== props.passwordToConfirm) {
       showError.value = true;
       errorMsg.value = "Password doesn't match";
