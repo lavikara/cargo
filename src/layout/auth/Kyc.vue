@@ -11,14 +11,26 @@
       </p>
       <form @submit.prevent="addKyc">
         <TextInput
-          name="fullName"
-          id="fullName"
-          label="Full Name"
-          placeHolder="John Doe"
+          name="firstName"
+          id="firstName"
+          label="First Name"
+          placeHolder="John"
           type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
-          @set="setName"
+          @set="setFirstname"
+          @valid="updateValidResult"
+        />
+        <TextInput
+          class="tw-mt-4"
+          name="lastName"
+          id="lastName"
+          label="Last Name"
+          placeHolder="Doe"
+          type="text"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @set="setLastname"
           @valid="updateValidResult"
         />
         <TextInput
@@ -152,7 +164,8 @@ const authStore = useAuthStore();
 const baseStore = useBaseStore();
 const validResults = ref([
   {
-    fullName: false,
+    firstName: false,
+    lastName: false,
     companyName: false,
     website: false,
     teamSize: false,
@@ -188,14 +201,18 @@ const stateList = computed(() => {
 const addKyc = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
-    console.log(payload.value);
-    // const userId = getItem("userId");
-    // authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
+
+    const userId = getItem("userId");
+    authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
   }, 500);
 };
 
-const setName = (text) => {
-  payload.value.fullName = text;
+const setFirstname = (text) => {
+  payload.value.firstName = text;
+};
+
+const setLastname = (text) => {
+  payload.value.lastName = text;
 };
 
 const setCompanyName = (text) => {
@@ -228,7 +245,8 @@ const setCity = (text) => {
 const setFormValid = () => {
   formValid.value = validResults.value.some((result) => {
     if (
-      result.fullName === true &&
+      result.firstName === true &&
+      result.lastName === true &&
       result.companyName === true &&
       result.website === true &&
       result.teamSize === true &&
@@ -240,8 +258,11 @@ const setFormValid = () => {
 
 const updateValidResult = (payload) => {
   switch (payload.type) {
-    case "fullName":
-      validResults.value.find((obj) => (obj.fullName = payload.value));
+    case "firstName":
+      validResults.value.find((obj) => (obj.firstName = payload.value));
+      break;
+    case "lastName":
+      validResults.value.find((obj) => (obj.lastName = payload.value));
       break;
     case "companyName":
       validResults.value.find((obj) => (obj.companyName = payload.value));

@@ -179,7 +179,8 @@ const signup = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
     console.log(payload.value);
-    // authStore.register({ ...payload.value, tierType: 1 });
+
+    authStore.registerIndividual({ ...payload.value, tierType: 3 });
   }, 500);
 };
 
