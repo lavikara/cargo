@@ -44,7 +44,7 @@
           :disabled="baseStore.btnLoading"
           :loading="baseStore.btnLoading"
         />
-        <div class="tw-flex tw-justify-center tw-items-center tw-mt-8">
+        <div class="tw-flex tw-justify-end tw-items-center tw-mt-8">
           <span class="tw-text-sm xxs:tw-mr-6">Don’t have an account?</span>
           <router-link
             :to="{ name: 'Signup' }"
@@ -75,13 +75,11 @@ const payload = ref({});
 const passwordInputType = ref("password");
 
 const login = () => {
-  authStore.login(payload.value);
+  setTimeout(async () => {
+    if (!formValid.value) return;
 
-  // setTimeout(async () => {
-  //   if (!formValid.value) return;
-
-  //   authStore.login(payload.value);
-  // }, 500);
+    authStore.login(payload.value);
+  }, 500);
 };
 
 const setEmail = (text) => {

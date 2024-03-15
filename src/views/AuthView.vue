@@ -94,7 +94,13 @@
         </div>
         <div class="tw-hidden lg:tw-flex lg:tw-justify-end">
           <img
-            v-if="route.name === 'Login'"
+            v-if="
+              route.name === 'Login' ||
+              route.name?.startsWith('ForgotPassword') ||
+              route.name === 'ResetPassword' ||
+              route.name === 'VerifyEmail' ||
+              route.name === 'RequestEmailVerificationToken'
+            "
             class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-cover"
             src="@/assets/img/login.png"
             loading="lazy"
@@ -108,7 +114,7 @@
             alt="cargo station"
           />
           <img
-            v-if="route.name === 'Kyc' || route.name === 'VerifyEmail'"
+            v-if="route.name === 'Kyc'"
             class="tw-fixed tw-w-[50%] xxxxl:tw-w-[40%] tw-h-screen tw-object-cover"
             src="@/assets/img/kyc.png"
             loading="lazy"

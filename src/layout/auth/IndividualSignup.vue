@@ -116,7 +116,7 @@
           :disabled="baseStore.btnLoading"
           :loading="baseStore.btnLoading"
         />
-        <div class="tw-flex tw-justify-center tw-items-center tw-mt-8">
+        <div class="tw-flex tw-justify-end tw-items-center tw-mt-8">
           <span class="tw-text-sm xxs:tw-mr-6">Already have an account?</span>
           <router-link
             :to="{ name: 'Login' }"

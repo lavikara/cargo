@@ -20,6 +20,9 @@
 import router from "@/router";
 
 const redirectToLogin = () => {
+  // Verify token
+  // If invalid token or expired, redirect to RequestEmailVerificationToken
+  // If valid token, redirect to Login
   setTimeout(async () => {
     router.replace({ name: "Login" });
   }, 3000);
