@@ -4,7 +4,7 @@
       <h3
         class="tw-max-w-xs tw-font-semibold tw-text-xl lg:tw-text-2xl tw-mb-4"
       >
-        CargoStation,Connecting Worlds, Faster and Smarter.
+        CargoStation, Connecting Worlds, Faster and Smarter.
       </h3>
       <p class="tw-text-sm">
         From small parcels to large freight, our customized logistics solutions

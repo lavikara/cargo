@@ -139,7 +139,7 @@ const validate = () => {
         emit("valid", { type: props.name, value: false });
       } else if (textDataValid.value < 3 && props.name !== "companyName") {
         showError.value = true;
-        errorMsg.value = "At list three characters";
+        errorMsg.value = "At least three characters";
         emit("valid", { type: props.name, value: false });
       } else if (props.name === "website") {
         urlValidation();
@@ -195,6 +195,13 @@ const urlValidation = () => {
 const passwordValidation = () => {
   textDataValid.value = textData.value.trim().length;
   emit("valid", { type: "passwordReset", value: false });
+  console.log("textDataValid.value");
+  console.log(textDataValid.value);
+
+  console.log("textData.value.length");
+  console.log(textData.value.length);
+
+  // if (textDataValid.value === 0 && textData.value.length > 0) {
   if (textDataValid.value === 0 && textData.value.length > 0) {
     emit("valid", { type: "password", value: false });
     showError.value = true;
@@ -247,8 +254,10 @@ const passwordValidation = () => {
     } else {
       emit("valid", { type: "passwordMatch", value: true });
     }
-  } else {
+  } else if (textDataValid.value >= 8) {
     emit("valid", { type: "password", value: true });
+  } else {
+    emit("valid", { type: "password", value: false });
   }
 };
 

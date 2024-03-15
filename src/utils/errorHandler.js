@@ -12,7 +12,7 @@ export default {
     if (error?.message === "Network Error") {
       message = "Connection not established";
     } else if (error?.message === "Request failed with status code 401") {
-      authStore?.logout();
+      // authStore?.logout();
       message = "You're not Authorized";
     } else if (error?.message == "timeout exceeded") {
       message = error?.message;
