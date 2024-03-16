@@ -1,27 +1,31 @@
-import client, { baseUrl } from ".";
+import client from ".";
 
 export default {
   login(payload) {
-    return client.post(`${baseUrl}/auth/login`, payload);
+    return client.post(`/auth/login`, payload);
   },
 
   register(payload) {
-    return client.post(`${baseUrl}/auth/register`, payload);
+    return client.post(`/auth/register`, payload);
   },
 
   registerIndividual(payload) {
-    return client.post(`${baseUrl}/auth/register/individual`, payload);
+    return client.post(`/auth/register/individual`, payload);
   },
 
   submitKyc(payload, userId) {
-    return client.patch(`${baseUrl}/auth/register/kyc/${userId}`, payload);
+    return client.patch(`/auth/register/kyc/${userId}`, payload);
   },
 
   forgotPassword(payload) {
-    return client.post(`${baseUrl}/auth/forgot-password`, payload);
+    return client.post(`/auth/forgot-password`, payload);
   },
 
   requestEmailToken(email) {
-    return client.get(`${baseUrl}/auth/request-email-token/${email}`);
+    return client.get(`/auth/request-email-token/${email}`);
+  },
+
+  verifyEmail(token, email) {
+    return client.get(`/auth/verify/${token}/${email}`);
   },
 };

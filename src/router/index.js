@@ -88,13 +88,14 @@ const router = createRouter({
             ),
         },
         {
-          path: "verify-email",
+          path: "verify-email/:token/:email",
           name: "VerifyEmail",
           component: () =>
             import(
               /* webpackChunkName: "auth" */
               "@/layout/auth/VerifyEmail.vue"
             ),
+          props: true,
         },
         {
           path: "verify-email/resend",

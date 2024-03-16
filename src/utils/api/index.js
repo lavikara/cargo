@@ -1,7 +1,6 @@
 import axios from "axios";
 import { getItem } from "../storage";
 
-export const baseUrl = "https://cargostation.onrender.com";
 // export const baseUrl = "http://localhost:5000";
 
 export const getHeaders = () => {
@@ -13,7 +12,7 @@ export const getHeaders = () => {
 };
 
 const client = axios.create({
-  baseURL: "http://127.0.0.1:8080",
+  baseURL: "https://cargostation.onrender.com",
 
   headers: {
     "Content-Type": "application/json",

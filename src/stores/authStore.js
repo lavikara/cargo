@@ -138,5 +138,36 @@ export const useAuthStore = defineStore({
         return false;
       }
     },
+
+    async verifyEmail(token, email) {
+      const baseStore = useBaseStore();
+      baseStore.updateBtnLoadingState(true);
+
+      try {
+        const response = await authApi.verifyEmail(token, email);
+        const { data } = response;
+        console.log("data from verify email");
+        console.log(data);
+
+        baseStore.updateBtnLoadingState(false);
+        baseStore.showToast({
+          description: data?.message,
+          display: true,
+          type: "",
+        });
+
+        setTimeout(() => {
+          router.replace({ name: "Login" });
+        }, 3000);
+        return true;
+      } catch (error) {
+        baseStore.updateBtnLoadingState(false);
+        errorHandler.handleError(error);
+        setTimeout(() => {
+          router.replace({ name: "Login" });
+        }, 3000);
+        return false;
+      }
+    },
   },
 });
