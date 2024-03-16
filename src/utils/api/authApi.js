@@ -28,4 +28,8 @@ export default {
   verifyEmail(token, email) {
     return client.get(`/auth/verify/${token}/${email}`);
   },
+
+  resetPassword(payload) {
+    return client.post(`/auth/reset-password`, payload);
+  },
 };

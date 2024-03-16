@@ -205,6 +205,8 @@ const urlValidation = () => {
 const passwordValidation = () => {
   textDataValid.value = textData.value.trim().length;
   emit("valid", { type: "passwordReset", value: false });
+  console.log("props.passwordToConfirm");
+  console.log(props.passwordToConfirm);
 
   if (textDataValid.value === 0 && textData.value.length > 0) {
     emit("valid", { type: "password", value: false });

@@ -169,5 +169,32 @@ export const useAuthStore = defineStore({
         return false;
       }
     },
+
+    async resetPassword(payload) {
+      const baseStore = useBaseStore();
+      baseStore.updateBtnLoadingState(true);
+
+      try {
+        const response = await authApi.resetPassword(payload);
+        const { data } = response;
+
+        console.log("data from reset password");
+        console.log(data);
+
+        baseStore.updateBtnLoadingState(false);
+        baseStore.showToast({
+          description: data?.message,
+          display: true,
+          type: "",
+        });
+
+        router.push({ name: "Login" });
+        return true;
+      } catch (error) {
+        baseStore.updateBtnLoadingState(false);
+        errorHandler.handleError(error);
+        return false;
+      }
+    },
   },
 });

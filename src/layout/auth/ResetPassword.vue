@@ -34,6 +34,7 @@
         id="password"
         label="Password"
         placeHolder="Password"
+        :validatePassword="true"
         :type="passwordInputType"
         :showLabel="true"
         :disabled="baseStore.btnLoading"
@@ -44,10 +45,11 @@
 
       <TextInput
         class="tw-mt-4"
-        name="passwordToConfirm"
-        id="passwordToConfirm"
+        name="confirmPassword"
+        id="confirmPassword"
         label="Confirm Password"
         placeHolder="Confirm Password"
+        :validatePassword="true"
         :type="passwordInputType"
         :showLabel="true"
         :disabled="baseStore.btnLoading"
@@ -87,13 +89,17 @@ import router from "@/router";
 
 const baseStore = useBaseStore();
 
-const validResults = ref([{ password: false }]);
+const validResults = ref([{ password: false, confirmPassword: false }]);
 const formValid = ref(false);
-const payload = ref({});
+const payload = ref({ password: "", confirmPassword: "" });
 const passwordInputType = ref("password");
 
 const setPassword = (text) => {
   payload.value.password = text;
+};
+
+const setConfirmPassword = (text) => {
+  payload.value.confirmPassword = text;
 };
 
 const resetPassword = () => {
@@ -102,17 +108,18 @@ const resetPassword = () => {
 
 const setFormValid = () => {
   formValid.value = validResults.value.some((result) => {
-    if (result.email === true && result.password === true) return true;
+    if (result.password === true && result.confirmPassword === true)
+      return true;
   });
 };
 
 const updateValidResult = (payload) => {
   switch (payload.type) {
-    case "email":
-      validResults.value.find((obj) => (obj.email = payload.value));
-      break;
     case "password":
       validResults.value.find((obj) => (obj.password = payload.value));
+      break;
+    case "confirmPassword":
+      validResults.value.find((obj) => (obj.confirmPassword = payload.value));
       break;
 
     default:
