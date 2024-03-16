@@ -8,7 +8,7 @@
       </h3>
       <p class="tw-text-sm tw-mb-8 tw-text-gray">
         We have sent an email to
-        <span class="tw-text-black">test@example.com</span>
+        <span class="tw-text-black">{{ email }}</span>
       </p>
 
       <Btn
@@ -34,11 +34,18 @@
 </template>
 
 <script setup>
+import router from "@/router";
+import { onMounted, ref } from "vue";
+
 import { useBaseStore } from "@/stores/baseStore.js";
+import { getItem } from "@/utils/storage";
 
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
-import router from "@/router";
+
+const email = ref("test@gmail.com");
+let cachedMail = getItem("email");
+email.value = cachedMail;
 
 const baseStore = useBaseStore();
 

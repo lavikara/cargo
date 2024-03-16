@@ -3,6 +3,8 @@ import { useBaseStore } from "@/stores/baseStore";
 
 export default {
   handleError(error) {
+    console.log("error");
+    console.log(error);
     const authStore = useAuthStore();
     const baseStore = useBaseStore();
 
@@ -14,8 +16,6 @@ export default {
       message = "You're not Authorized";
     } else if (error?.message == "timeout exceeded") {
       message = error?.message;
-    } else if (error?.response?.data?.error) {
-      message = error?.response?.data?.error;
     } else if (error?.response?.data?.message) {
       message = error?.response?.data?.message;
     } else {

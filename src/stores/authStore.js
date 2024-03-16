@@ -22,12 +22,7 @@ export const useAuthStore = defineStore({
         const response = await authApi.login(payload);
         const { data } = response;
         this.user = data?.user;
-        // setItem("token", data?.token);
-        // baseStore.showToast({
-        //   description: "You need to setup 2FA to continue",
-        //   display: true,
-        //   type: "info",
-        // });
+
         baseStore.updateBtnLoadingState(false);
         router.push({ name: "DashboardView" });
         return true;
@@ -75,11 +70,67 @@ export const useAuthStore = defineStore({
     async submitKyc(payload, userId) {
       const baseStore = useBaseStore();
       baseStore.updateBtnLoadingState(true);
+
       try {
         const response = await authApi.submitKyc(payload, userId);
         const { data } = response;
+
         baseStore.updateBtnLoadingState(false);
         router.push({ name: "AddMember" });
+        return true;
+      } catch (error) {
+        baseStore.updateBtnLoadingState(false);
+        errorHandler.handleError(error);
+        return false;
+      }
+    },
+
+    async forgotPassword(payload) {
+      const baseStore = useBaseStore();
+      baseStore.updateBtnLoadingState(true);
+
+      try {
+        const response = await authApi.forgotPassword(payload);
+        const { data } = response;
+        setItem("email", data?.user?.email);
+        console.log("data from forgotPassword");
+        console.log(data);
+
+        baseStore.updateBtnLoadingState(false);
+        baseStore.showToast({
+          description: data?.message,
+          display: true,
+          type: "",
+        });
+
+        router.push({ name: "ForgotPasswordSuccess" });
+        return true;
+      } catch (error) {
+        baseStore.updateBtnLoadingState(false);
+        errorHandler.handleError(error);
+        return false;
+      }
+    },
+
+    async requestEmailToken(email) {
+      const baseStore = useBaseStore();
+      baseStore.updateBtnLoadingState(true);
+
+      try {
+        const response = await authApi.requestEmailToken(email);
+        const { data } = response;
+        setItem("email", data?.user?.email);
+        console.log("data from request email token");
+        console.log(data);
+
+        baseStore.updateBtnLoadingState(false);
+        baseStore.showToast({
+          description: data?.message,
+          display: true,
+          type: "",
+        });
+
+        router.push({ name: "ForgotPasswordSuccess" });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);

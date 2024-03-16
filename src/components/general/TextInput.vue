@@ -193,8 +193,6 @@ const validate = () => {
 
 const urlValidation = () => {
   textDataValid.value = validateWebsite(textData.value);
-  console.log("Url value");
-  console.log(textDataValid.value);
   if (textDataValid.value === null) {
     showError.value = true;
     errorMsg.value = "Url is invalid";
