@@ -1,6 +1,6 @@
 <template>
-  <div id="signup-layout">
-    <div class="tw-mt-16">
+  <div id="signup-enduser-layout">
+    <div class="tw-my-16">
       <h3
         class="tw-max-w-xs tw-font-semibold tw-text-xl lg:tw-text-2xl tw-mb-4"
       >
@@ -10,8 +10,32 @@
         From small parcels to large freight, our customized logistics solutions
         are designed to meet your specific requirements.
       </p>
+
       <h3 class="tw-font-semibold tw-text-xl tw-mt-8 tw-mb-8">Sign Up</h3>
       <form @submit.prevent="signup">
+        <TextInput
+          name="firstName"
+          id="firstName"
+          label="First Name"
+          placeHolder="John"
+          type="text"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @set="setFirstname"
+          @valid="updateValidResult"
+        />
+        <TextInput
+          class="tw-mt-4"
+          name="lastName"
+          id="lastName"
+          label="Last Name"
+          placeHolder="Doe"
+          type="text"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @set="setLastname"
+          @valid="updateValidResult"
+        />
         <TextInput
           class="tw-mt-4"
           name="email"
@@ -24,6 +48,7 @@
           @set="setEmail"
           @valid="updateValidResult"
         />
+
         <TextInput
           class="tw-mt-4"
           name="password"
@@ -110,8 +135,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
-import CheckBlueIcon from "@/components/icons/CheckBlueIcon.vue";
 import TextInput from "@/components/general/TextInput.vue";
+import CheckBlueIcon from "@/components/icons/CheckBlueIcon.vue";
 import Btn from "@/components/general/Btn.vue";
 
 const router = useRouter();
@@ -121,6 +146,8 @@ const authStore = useAuthStore();
 const validResults = ref([
   {
     email: false,
+    firstName: false,
+    lastName: false,
     hasLowerCase: false,
     hasUpperCase: false,
     hasNumber: false,
@@ -131,6 +158,14 @@ const validResults = ref([
 const formValid = ref(false);
 const payload = ref({});
 const passwordInputType = ref("password");
+
+const setFirstname = (text) => {
+  payload.value.firstName = text;
+};
+
+const setLastname = (text) => {
+  payload.value.lastName = text;
+};
 
 const setEmail = (text) => {
   payload.value.email = text;
@@ -143,7 +178,8 @@ const setPassword = (text) => {
 const signup = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
-    authStore.register({ ...payload.value, tierType: 1 });
+
+    authStore.registerIndividual({ ...payload.value, tierType: 3 });
   }, 500);
 };
 
@@ -151,6 +187,8 @@ const setFormValid = () => {
   formValid.value = validResults.value.some((result) => {
     if (
       result.email === true &&
+      result.firstName === true &&
+      result.lastName === true &&
       result.hasLowerCase === true &&
       result.hasUpperCase === true &&
       result.hasNumber === true &&
@@ -163,6 +201,12 @@ const setFormValid = () => {
 
 const updateValidResult = (payload) => {
   switch (payload.type) {
+    case "firstName":
+      validResults.value.find((obj) => (obj.firstName = payload.value));
+      break;
+    case "lastName":
+      validResults.value.find((obj) => (obj.lastName = payload.value));
+      break;
     case "email":
       validResults.value.find((obj) => (obj.email = payload.value));
       break;

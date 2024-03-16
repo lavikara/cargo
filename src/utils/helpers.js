@@ -1,5 +1,3 @@
-// import * as CryptoJS from "crypto-js";
-
 export const isNumber = (evt) => {
   evt = evt ? evt : window.event;
   let charCode = evt.which ? evt.which : evt.keyCode;
@@ -122,44 +120,31 @@ export const removeDash = (value) => {
   return splitValue.join(" ");
 };
 
-// export const encryptPayload = (formData) => {
-//   const key = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_APP_ENCRYPTION_KEY);
-//   const iv = CryptoJS.enc.Utf8.parse(
-//     import.meta.env.VITE_APP_ENCRYPTION_SECRET
-//   );
+export const validateWebsite = (website) => {
+  const prefix = "https://";
+  let newUrl = "";
 
-//   const postDataObj = JSON.stringify(formData);
-//   const encryptedData = CryptoJS.AES.encrypt(
-//     CryptoJS.enc.Utf8.parse(postDataObj),
-//     key,
-//     {
-//       keySize: 128 / 8,
-//       iv: iv,
-//       mode: CryptoJS.mode.CBC,
-//       padding: CryptoJS.pad.Pkcs7,
-//     }
-//   );
-//   const payload = encryptedData.toString();
-//   const formSending = {
-//     requestParam: payload,
-//   };
-//   return formSending;
-// };
+  // const hasHttps = website.trim().toLowerCase().startsWith("https://");
+  const startsWithHttp = website.trim().toLowerCase().startsWith("http");
+  const strippedDomain = website.trim().toLowerCase().substring(0, 8);
+  if (startsWithHttp && strippedDomain !== prefix) {
+    return false;
+  } else if (startsWithHttp && strippedDomain === prefix) {
+    newUrl = website;
+  } else if (!startsWithHttp) {
+    newUrl = prefix.concat(website);
+  } else {
+    newUrl = website;
+  }
 
-// export const decryptPayload = (payload) => {
-//   const key = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_APP_ENCRYPTION_KEY);
-//   const iv = CryptoJS.enc.Utf8.parse(
-//     import.meta.env.VITE_APP_ENCRYPTION_SECRET
-//   );
+  // if (!hasHttps) {
+  //   newUrl = prefix.concat(website);
+  // } else {
+  //   newUrl = website;
+  // }
 
-//   const decryptedData = CryptoJS.AES.decrypt(payload, key, {
-//     keySize: 128 / 8,
-//     iv: iv,
-//     mode: CryptoJS.mode.CBC,
-//     padding: CryptoJS.pad.Pkcs7,
-//   });
-//   const decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
-//   const decryptedObj = JSON.parse(decryptedText);
+  let pattern =
+    /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
 
-//   return decryptedObj;
-// };
+  return pattern.test(newUrl);
+};

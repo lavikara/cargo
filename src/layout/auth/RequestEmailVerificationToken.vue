@@ -4,13 +4,14 @@
       <h3
         class="tw-max-w-xs tw-font-semibold tw-text-xl lg:tw-text-2xl tw-mb-4"
       >
-        Forgot your Password?
+        Request Email Verification?
       </h3>
       <p class="tw-text-sm tw-mb-8 tw-text-gray">
-        No worries, we'll send you reset instructions to your registered mail
+        Missed verification? we'll send you a new reset instructions to your
+        registered mail
       </p>
 
-      <form @submit.prevent="resetPassword">
+      <form @submit.prevent="requestToken">
         <TextInput
           name="email"
           id="email"
@@ -60,7 +61,7 @@ const validResults = ref([{ email: false }]);
 const formValid = ref(false);
 const payload = ref({});
 
-const resetPassword = () => {
+const requestToken = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
 
