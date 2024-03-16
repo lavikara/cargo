@@ -123,13 +123,28 @@ export const removeDash = (value) => {
 export const validateWebsite = (website) => {
   const prefix = "https://";
   let newUrl = "";
-  const hasHttps = website.trim().toLowerCase().startsWith("https://");
-  if (!hasHttps) {
+
+  // const hasHttps = website.trim().toLowerCase().startsWith("https://");
+  const startsWithHttp = website.trim().toLowerCase().startsWith("http");
+  const strippedDomain = website.trim().toLowerCase().substring(0, 8);
+  if (startsWithHttp && strippedDomain !== prefix) {
+    return false;
+  } else if (startsWithHttp && strippedDomain === prefix) {
+    newUrl = website;
+  } else if (!startsWithHttp) {
     newUrl = prefix.concat(website);
   } else {
     newUrl = website;
   }
-  return String(newUrl).match(
-    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
-  );
+
+  // if (!hasHttps) {
+  //   newUrl = prefix.concat(website);
+  // } else {
+  //   newUrl = website;
+  // }
+
+  let pattern =
+    /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
+
+  return pattern.test(newUrl);
 };

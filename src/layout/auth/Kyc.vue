@@ -130,6 +130,8 @@
           label="City"
           placeHolder="City/town"
           type="text"
+          minLengthLabel="one"
+          :minLength="1"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
           @set="setCity"

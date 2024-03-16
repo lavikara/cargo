@@ -110,6 +110,8 @@ const props = defineProps({
   validatePassword: { type: Boolean, default: () => false },
   readonly: { type: Boolean, default: () => false },
   disabled: { type: Boolean, default: () => false },
+  minLength: { type: Number, default: () => 3 },
+  minLengthLabel: { type: String, default: () => "three" },
 });
 
 let textData = ref("");
@@ -140,11 +142,14 @@ const validate = () => {
       textDataValid.value = textData.value.trim().length;
       if (textDataValid.value === null || textDataValid.value === 0) {
         showError.value = true;
-        errorMsg.value = "Field can not be empty";
+        errorMsg.value = "Field cannot be empty";
         emit("valid", { type: props.name, value: false });
-      } else if (textDataValid.value < 3 && props.name !== "companyName") {
+      } else if (
+        textDataValid.value < props.minLength &&
+        props.name !== "companyName"
+      ) {
         showError.value = true;
-        errorMsg.value = "At least three characters";
+        errorMsg.value = `At least ${props.minLengthLabel} characters`;
         emit("valid", { type: props.name, value: false });
       } else if (props.name === "website") {
         urlValidation();
@@ -188,6 +193,8 @@ const validate = () => {
 
 const urlValidation = () => {
   textDataValid.value = validateWebsite(textData.value);
+  console.log("Url value");
+  console.log(textDataValid.value);
   if (textDataValid.value === null) {
     showError.value = true;
     errorMsg.value = "Url is invalid";
@@ -201,7 +208,6 @@ const passwordValidation = () => {
   textDataValid.value = textData.value.trim().length;
   emit("valid", { type: "passwordReset", value: false });
 
-  // if (textDataValid.value === 0 && textData.value.length > 0) {
   if (textDataValid.value === 0 && textData.value.length > 0) {
     emit("valid", { type: "password", value: false });
     showError.value = true;
