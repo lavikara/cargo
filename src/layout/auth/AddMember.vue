@@ -60,28 +60,49 @@
         ><span class="tw-w-full tw-border-b tw-border-b-gray-border"></span>
       </div>
       <TextInput
+        v-if="showEmailInput"
         class="tw-mt-8"
         name="email"
         id="email"
         label="Email"
         placeHolder="example@email.com"
         type="email"
+        :clearTextData="clearTextData"
         :showLabel="true"
         :disabled="baseStore.btnLoading"
         @set="setEmail"
         @valid="updateValidResult"
       />
+      <p
+        v-if="!showEmailInput"
+        class="tw-text-white tw-text-center tw-bg-red tw-rounded-2xl tw-py-3 tw-mt-8"
+      >
+        Please use your invite link to add more members
+      </p>
+      <div v-if="payload.length > 0" class="tw-flex tw-flex-wrap tw-mt-2">
+        <div
+          v-for="(email, index) in payload"
+          :key="email"
+          class="tw-text-white tw-p-2"
+        >
+          <div
+            class="tw-relative tw-flex tw-items-center tw-text-sm tw-bg-purple tw-rounded tw-pl-2 tw-pr-6 tw-py-1"
+          >
+            {{ email }}
+            <CloseGrayIcon
+              class="tw-absolute tw-top-[0.2rem] tw-right-[0.2rem] tw-bg-white tw-rounded tw-cursor-pointer tw-ml-1"
+              @click="removeEmail(index)"
+            />
+          </div>
+        </div>
+      </div>
       <Btn
         class="tw-mt-12"
         title="Finish Setup"
         :btnStyle="baseStore.blueBtn"
         :disabled="baseStore.btnLoading"
         :loading="baseStore.btnLoading"
-        @click="
-          {
-            router.replace({ name: 'Login' });
-          }
-        "
+        @click="addMembers"
       />
       <div class="tw-flex tw-justify-center tw-items-center tw-mt-4">
         <router-link
@@ -102,12 +123,58 @@ import { useBaseStore } from "@/stores/baseStore.js";
 import TextInput from "@/components/general/TextInput.vue";
 import SelectInput from "@/components/general/SelectInput.vue";
 import Btn from "@/components/general/Btn.vue";
+import CloseGrayIcon from "@/components/icons/CloseGrayIcon.vue";
 
 const router = useRouter();
 const baseStore = useBaseStore();
 const validResults = ref([{ email: false, password: false }]);
 const formValid = ref(false);
-const payload = ref({});
+const clearTextData = ref(false);
+const showEmailInput = ref(true);
+const email = ref("");
+const payload = ref([]);
+
+const addMembers = () => {
+  setTimeout(async () => {
+    if (!formValid.value) return;
+    console.log(payload.value);
+  }, 500);
+};
+
+const setEmail = (text) => {
+  email.value = text;
+};
+
+const removeEmail = (index) => {
+  console.log(index);
+  payload.value.splice(index, 1);
+  showEmailInput.value = true;
+};
+
+const setFormValid = () => {
+  formValid.value = validResults.value.some((result) => {
+    if (result.email === true) return true;
+  });
+};
+
+const updateValidResult = (emittedPayload) => {
+  switch (emittedPayload.type) {
+    case "email":
+      validResults.value.find((obj) => (obj.email = emittedPayload.value));
+      if (emittedPayload.value) {
+        payload.value.push(email.value);
+        clearTextData.value = !clearTextData.value;
+        setTimeout(() => {
+          if (payload.value.length === 5) showEmailInput.value = false;
+        }, 500);
+      }
+      break;
+
+    default:
+      break;
+  }
+  setFormValid();
+};
 </script>
 
 <style lang="scss" scoped></style>

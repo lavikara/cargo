@@ -18,20 +18,18 @@ export const useAuthStore = defineStore({
     async login(payload) {
       const baseStore = useBaseStore();
       baseStore.updateBtnLoadingState(true);
-
       try {
         const response = await authApi.login(payload);
         const { data } = response;
-        console.log("data from login");
-        console.log(response);
-        console.log(data);
-
         this.user = data?.user;
-        setItem("token", data?.token);
-
+        // setItem("token", data?.token);
+        // baseStore.showToast({
+        //   description: "You need to setup 2FA to continue",
+        //   display: true,
+        //   type: "info",
+        // });
         baseStore.updateBtnLoadingState(false);
-
-        router.replace({ name: "DashboardView" });
+        router.push({ name: "DashboardView" });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
@@ -43,20 +41,13 @@ export const useAuthStore = defineStore({
     async register(payload) {
       const baseStore = useBaseStore();
       baseStore.updateBtnLoadingState(true);
-
       try {
         const response = await authApi.register(payload);
         const { data } = response;
-        console.log("data from register");
-        console.log(response);
-        console.log(data);
-
         this.user = data?.user;
         setItem("userId", data?.user?.userId);
-
         baseStore.updateBtnLoadingState(false);
-
-        router.replace({ name: "Kyc" });
+        router.push({ name: "Kyc" });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
@@ -68,16 +59,11 @@ export const useAuthStore = defineStore({
     async registerIndividual(payload) {
       const baseStore = useBaseStore();
       baseStore.updateBtnLoadingState(true);
-
       try {
         const response = await authApi.registerIndividual(payload);
         const { data } = response;
-        console.log("data from register individual");
-        console.log(response);
-        console.log(data);
-
         baseStore.updateBtnLoadingState(false);
-        router.replace({ name: "Login" });
+        router.push({ name: "Login" });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
@@ -89,16 +75,11 @@ export const useAuthStore = defineStore({
     async submitKyc(payload, userId) {
       const baseStore = useBaseStore();
       baseStore.updateBtnLoadingState(true);
-
       try {
         const response = await authApi.submitKyc(payload, userId);
         const { data } = response;
-        console.log("data from submit kyc");
-        console.log(response);
-        console.log(data);
-
         baseStore.updateBtnLoadingState(false);
-        router.replace({ name: "AddMember" });
+        router.push({ name: "AddMember" });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);

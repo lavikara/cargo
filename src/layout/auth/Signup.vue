@@ -143,8 +143,6 @@ const setPassword = (text) => {
 const signup = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
-    console.log(payload.value);
-
     authStore.register({ ...payload.value, tierType: 1 });
   }, 500);
 };

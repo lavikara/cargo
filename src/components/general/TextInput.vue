@@ -19,6 +19,10 @@
         :disabled="disabled"
         v-model="textData"
       />
+      <PlusGrayIcon
+        v-if="route.name === 'AddMember' && props.type === 'email'"
+        class="tw-absolute tw-right-4 tw-top-[2.7rem] tw-cursor-pointer"
+      />
       <span
         v-if="name === 'website'"
         class="tw-absolute tw-top-[1.82rem] tw-left-[0.05rem] tw-w-20 tw-text-gray tw-bg-gray-border tw-rounded-tl-2xl tw-rounded-bl-2xl tw-px-4 tw-py-[0.75rem]"
@@ -81,6 +85,7 @@
 import { ref, watchEffect, onMounted } from "vue";
 import { isNumber, emailValidation, validateWebsite } from "@/utils/helpers";
 import { useRoute } from "vue-router";
+import PlusGrayIcon from "@/components/icons/PlusGrayIcon.vue";
 
 const route = useRoute();
 const emit = defineEmits(["set", "valid", "showPassword"]);
@@ -195,11 +200,6 @@ const urlValidation = () => {
 const passwordValidation = () => {
   textDataValid.value = textData.value.trim().length;
   emit("valid", { type: "passwordReset", value: false });
-  console.log("textDataValid.value");
-  console.log(textDataValid.value);
-
-  console.log("textData.value.length");
-  console.log(textData.value.length);
 
   // if (textDataValid.value === 0 && textData.value.length > 0) {
   if (textDataValid.value === 0 && textData.value.length > 0) {

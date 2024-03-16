@@ -6,8 +6,8 @@
     viewBox="0 0 400 200"
   >
     <circle
-      fill="#96A0B6"
-      stroke="#96A0B6"
+      fill="#ffffff"
+      stroke="#ffffff"
       stroke-width="2"
       r="40"
       cx="50"
@@ -24,8 +24,8 @@
       ></animate>
     </circle>
     <circle
-      fill="#96A0B6"
-      stroke="#96A0B6"
+      fill="#ffffff"
+      stroke="#ffffff"
       stroke-width="2"
       r="40"
       cx="200"
@@ -42,8 +42,8 @@
       ></animate>
     </circle>
     <circle
-      fill="#96A0B6"
-      stroke="#96A0B6"
+      fill="#ffffff"
+      stroke="#ffffff"
       stroke-width="2"
       r="40"
       cx="350"
