@@ -64,7 +64,6 @@ const payload = ref({});
 const resetPassword = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
-
     authStore.forgotPassword(payload.value);
   }, 500);
 };
