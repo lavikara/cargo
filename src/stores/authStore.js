@@ -23,6 +23,11 @@ export const useAuthStore = defineStore({
         const { data } = response;
         this.user = data?.user;
         baseStore.updateBtnLoadingState(false);
+        baseStore.showToast({
+          description: data?.message,
+          display: true,
+          type: "success",
+        });
         router.push({ name: "DashboardView" });
         return true;
       } catch (error) {
