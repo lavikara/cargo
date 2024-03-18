@@ -18,7 +18,7 @@ const client = axios.create({
     "Content-Type": "application/json",
   },
 
-  timeout: 15000,
+  timeout: 30000,
 });
 
 client.interceptors.request.use(
