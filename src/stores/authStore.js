@@ -22,7 +22,6 @@ export const useAuthStore = defineStore({
         const response = await authApi.login(payload);
         const { data } = response;
         this.user = data?.user;
-
         baseStore.updateBtnLoadingState(false);
         router.push({ name: "DashboardView" });
         return true;
@@ -74,7 +73,8 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.submitKyc(payload, userId);
         const { data } = response;
-
+        setItem("inviteLink", data?.user?.teamInviteLink);
+        this.user = data?.user;
         baseStore.updateBtnLoadingState(false);
         router.push({ name: "AddMember" });
         return true;
@@ -93,8 +93,6 @@ export const useAuthStore = defineStore({
         const response = await authApi.forgotPassword(payload);
         const { data } = response;
         setItem("email", data?.user?.email);
-        console.log("data from forgotPassword");
-        console.log(data);
 
         baseStore.updateBtnLoadingState(false);
         baseStore.showToast({
@@ -103,7 +101,7 @@ export const useAuthStore = defineStore({
           type: "",
         });
 
-        router.push({ name: "ForgotPasswordSuccess" });
+        router.push({ name: "Login" });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
@@ -120,9 +118,6 @@ export const useAuthStore = defineStore({
         const response = await authApi.requestEmailToken(email);
         const { data } = response;
         setItem("email", data?.user?.email);
-        console.log("data from request email token");
-        console.log(data);
-
         baseStore.updateBtnLoadingState(false);
         baseStore.showToast({
           description: data?.message,
@@ -146,9 +141,6 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.verifyEmail(token, email);
         const { data } = response;
-        console.log("data from verify email");
-        console.log(data);
-
         baseStore.updateBtnLoadingState(false);
         baseStore.showToast({
           description: data?.message,
@@ -173,21 +165,31 @@ export const useAuthStore = defineStore({
     async resetPassword(payload) {
       const baseStore = useBaseStore();
       baseStore.updateBtnLoadingState(true);
-
       try {
         const response = await authApi.resetPassword(payload);
         const { data } = response;
-
-        console.log("data from reset password");
-        console.log(data);
-
         baseStore.updateBtnLoadingState(false);
         baseStore.showToast({
           description: data?.message,
           display: true,
           type: "",
         });
+        router.push({ name: "Login" });
+        return true;
+      } catch (error) {
+        baseStore.updateBtnLoadingState(false);
+        errorHandler.handleError(error);
+        return false;
+      }
+    },
 
+    async addMembers(payload, userId) {
+      const baseStore = useBaseStore();
+      baseStore.updateBtnLoadingState(true);
+      try {
+        const response = await authApi.addMembers(payload, userId);
+        const { data } = response;
+        baseStore.updateBtnLoadingState(false);
         router.push({ name: "Login" });
         return true;
       } catch (error) {
