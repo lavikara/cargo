@@ -34,12 +34,12 @@ const router = createRouter({
             ),
         },
         {
-          path: "signup-tier3",
-          name: "EndUserSignup",
+          path: "signup/individual",
+          name: "IndividualSignup",
           component: () =>
             import(
               /* webpackChunkName: "auth" */
-              "@/layout/auth/EndUserSignup.vue"
+              "@/layout/auth/IndividualSignup.vue"
             ),
         },
         {
@@ -69,13 +69,41 @@ const router = createRouter({
               "@/layout/auth/ForgotPassword.vue"
             ),
         },
+        // {
+        //   path: "forgot-password/success",
+        //   name: "ForgotPasswordSuccess",
+        //   component: () =>
+        //     import(
+        //       /* webpackChunkName: "auth" */
+        //       "@/layout/auth/ForgotPasswordSuccess.vue"
+        //     ),
+        // },
         {
-          path: "verify-email",
+          path: "reset-password/:token/:email",
+          name: "ResetPassword",
+          component: () =>
+            import(
+              /* webpackChunkName: "auth" */
+              "@/layout/auth/ResetPassword.vue"
+            ),
+        },
+        {
+          path: "verify-email/:token/:email",
           name: "VerifyEmail",
           component: () =>
             import(
               /* webpackChunkName: "auth" */
               "@/layout/auth/VerifyEmail.vue"
+            ),
+          props: true,
+        },
+        {
+          path: "verify-email/resend",
+          name: "RequestEmailVerificationToken",
+          component: () =>
+            import(
+              /* webpackChunkName: "auth" */
+              "@/layout/auth/RequestEmailVerificationToken.vue"
             ),
         },
       ],

@@ -9,6 +9,7 @@
         class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-cursor-pointer focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1"
         :class="{
           '!tw-bg-gray-border': bgColor === 'gray',
+          '!tw-cursor-not-allowed': disabled,
           '!tw-rounded-tr-none !tw-rounded-br-none': leftSide,
           '!tw-rounded-tl-none !tw-rounded-bl-none': rightSide,
           'select-appearance': !appearance,

@@ -44,7 +44,7 @@
           :disabled="baseStore.btnLoading"
           :loading="baseStore.btnLoading"
         />
-        <div class="tw-flex tw-justify-center tw-items-center tw-mt-8">
+        <div class="tw-flex tw-justify-end tw-items-center tw-mt-8">
           <span class="tw-text-sm xxs:tw-mr-6">Don’t have an account?</span>
           <router-link
             :to="{ name: 'Signup' }"
@@ -61,11 +61,15 @@
 <script setup>
 import { ref } from "vue";
 import { useBaseStore } from "@/stores/baseStore.js";
+import { useAuthStore } from "@/stores/authStore.js";
+
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
 
+const authStore = useAuthStore();
+
 const baseStore = useBaseStore();
-const validResults = ref([{ email: false, password: false }]);
+const validResults = ref([{ email: false }]);
 const formValid = ref(false);
 const payload = ref({});
 const passwordInputType = ref("password");
@@ -73,6 +77,8 @@ const passwordInputType = ref("password");
 const login = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
+
+    authStore.login(payload.value);
   }, 500);
 };
 
@@ -86,7 +92,7 @@ const setPassword = (text) => {
 
 const setFormValid = () => {
   formValid.value = validResults.value.some((result) => {
-    if (result.email === true && result.password === true) return true;
+    if (result.email === true) return true;
   });
 };
 
@@ -94,9 +100,6 @@ const updateValidResult = (payload) => {
   switch (payload.type) {
     case "email":
       validResults.value.find((obj) => (obj.email = payload.value));
-      break;
-    case "password":
-      validResults.value.find((obj) => (obj.password = payload.value));
       break;
 
     default:

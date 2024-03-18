@@ -11,14 +11,26 @@
       </p>
       <form @submit.prevent="addKyc">
         <TextInput
-          name="yourName"
-          id="yourName"
-          label="Your Name"
-          placeHolder="Your Name"
+          name="firstName"
+          id="firstName"
+          label="First Name"
+          placeHolder="John"
           type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
-          @set="setName"
+          @set="setFirstname"
+          @valid="updateValidResult"
+        />
+        <TextInput
+          class="tw-mt-4"
+          name="lastName"
+          id="lastName"
+          label="Last Name"
+          placeHolder="Doe"
+          type="text"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @set="setLastname"
           @valid="updateValidResult"
         />
         <TextInput
@@ -35,11 +47,11 @@
         />
         <TextInput
           class="tw-mt-4"
-          name="companyWebsite"
-          id="companyWebsite"
+          name="website"
+          id="website"
           label="Company Website"
           placeHolder="Company Website"
-          type="url"
+          type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
           @set="setCompanyWebsite"
@@ -89,40 +101,50 @@
             </div>
           </div>
         </div>
-        <div class="tw-grid tw-grid-cols-4 tw-mt-4">
-          <SelectInput
-            class="tw-col-start-1 tw-col-end-4"
-            label="Location"
-            defaltOption="State"
-            name="location"
-            id="location"
-            :showLabel="true"
-            :leftSide="true"
-            :list="stateList"
-            :disabled="baseStore.btnLoading"
-            @set="setState"
-          />
-          <SelectInput
-            class="tw-col-start-4 tw-mt-6"
-            label="Country"
-            defaltOption="Country"
-            name="role"
-            id="role"
-            bgColor="gray"
-            :rightSide="true"
-            :list="countryList"
-            :disabled="baseStore.btnLoading"
-            @set="setCountry"
-          />
-        </div>
+        <SelectInput
+          class="tw-mt-4"
+          label="Country"
+          defaltOption="Country"
+          name="country"
+          id="country"
+          :showLabel="true"
+          :list="countryList"
+          :disabled="baseStore.btnLoading"
+          @set="setCountry"
+        />
+        <SelectInput
+          class="tw-mt-4"
+          label="State"
+          defaltOption="State"
+          name="location"
+          id="location"
+          :showLabel="true"
+          :list="stateList"
+          :disabled="stateInputDisabled"
+          @set="setState"
+        />
+        <TextInput
+          class="tw-mt-4"
+          name="city"
+          id="city"
+          label="City"
+          placeHolder="City/town"
+          type="text"
+          minLengthLabel="one"
+          :minLength="1"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @set="setCity"
+          @valid="updateValidResult"
+        />
         <Btn
           class="tw-mt-8"
           title="Create Account"
           :btnStyle="baseStore.blueBtn"
           :disabled="baseStore.btnLoading"
           :loading="baseStore.btnLoading"
-          @click="router.push({ name: 'AddMember' })"
         />
+        <!-- @click="router.push({ name: 'AddMember' })" -->
       </form>
     </div>
   </div>
@@ -132,15 +154,28 @@
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
+import { useAuthStore } from "@/stores/authStore.js";
 import countryRegionData from "@/utils/js/countryRegionData.js";
 import TextInput from "@/components/general/TextInput.vue";
 import SelectInput from "@/components/general/SelectInput.vue";
 import Btn from "@/components/general/Btn.vue";
+import { getItem } from "@/utils/storage";
 
 const router = useRouter();
+const authStore = useAuthStore();
 const baseStore = useBaseStore();
-const validResults = ref([{ email: false, password: false }]);
+const validResults = ref([
+  {
+    firstName: false,
+    lastName: false,
+    companyName: false,
+    website: false,
+    teamSize: false,
+    city: false,
+  },
+]);
 const formValid = ref(false);
+const stateInputDisabled = ref(true);
 const payload = ref({});
 const teamSize = ref("");
 
@@ -159,6 +194,7 @@ const stateList = computed(() => {
       countryObj.regions.map((region) => {
         list.push(region.name);
       });
+      stateInputDisabled.value = false;
     }
   });
   return list;
@@ -167,41 +203,77 @@ const stateList = computed(() => {
 const addKyc = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
+
+    const userId = getItem("userId");
+    authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
   }, 500);
 };
 
-const setName = (text) => {
-  payload.value.name = text;
+const setFirstname = (text) => {
+  payload.value.firstName = text;
+};
+
+const setLastname = (text) => {
+  payload.value.lastName = text;
 };
 
 const setCompanyName = (text) => {
-  payload.value.password = text;
+  payload.value.companyName = text;
 };
 
 const setCompanyWebsite = (text) => {
-  payload.value.password = text;
+  payload.value.companyWebsite = text;
+};
+
+const setTeamSize = (size) => {
+  teamSize.value = size;
+  payload.value.teamSize = size;
+  validResults.value[0].teamSize = true;
+  setFormValid();
 };
 
 const setState = (text) => {
-  payload.value.password = text;
+  payload.value.state = text;
 };
 
 const setCountry = (text) => {
   payload.value.country = text;
 };
 
-const setTeamSize = (size) => {
-  teamSize.value = size;
-  payload.value.team_size = size;
+const setCity = (text) => {
+  payload.value.city = text;
+};
+
+const setFormValid = () => {
+  formValid.value = validResults.value.some((result) => {
+    if (
+      result.firstName === true &&
+      result.lastName === true &&
+      result.companyName === true &&
+      result.website === true &&
+      result.teamSize === true &&
+      result.city === true
+    )
+      return true;
+  });
 };
 
 const updateValidResult = (payload) => {
   switch (payload.type) {
-    case "email":
-      validResults.value.find((obj) => (obj.email = payload.value));
+    case "firstName":
+      validResults.value.find((obj) => (obj.firstName = payload.value));
       break;
-    case "password":
-      validResults.value.find((obj) => (obj.password = payload.value));
+    case "lastName":
+      validResults.value.find((obj) => (obj.lastName = payload.value));
+      break;
+    case "companyName":
+      validResults.value.find((obj) => (obj.companyName = payload.value));
+      break;
+    case "website":
+      validResults.value.find((obj) => (obj.website = payload.value));
+      break;
+    case "city":
+      validResults.value.find((obj) => (obj.city = payload.value));
       break;
 
     default:

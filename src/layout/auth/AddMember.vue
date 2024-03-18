@@ -43,16 +43,33 @@
             </p>
           </div>
         </div>
-        <TextInput
-          class="tw-mt-4"
-          name="inviteLink"
-          id="inviteLink"
-          label="Invite Link"
-          placeHolder="Invite Link"
-          type="url"
-          :copy="true"
-          :disabled="true"
-        />
+        <div class="tw-relative tw-mt-4">
+          <input
+            ref="inviteLinkUrl"
+            class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-transition-all tw-duration-300 focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1"
+            type="text"
+            :value="inviteLink"
+            @focus="$event.target.select()"
+          />
+          <svg
+            class="tw-absolute tw-right-6 tw-bottom-4 tw-bg-white tw-rounded tw-cursor-pointer tw-p-0.5"
+            width="20"
+            height="20"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            @click="copyText"
+          >
+            <path
+              d="M5.5999 2.79998C5.5999 2.13723 6.13716 1.59998 6.7999 1.59998H9.90285C10.2211 1.59998 10.5263 1.7264 10.7514 1.95145L13.2484 4.4485C13.4735 4.67355 13.5999 4.97877 13.5999 5.29703V9.99998C13.5999 10.6627 13.0626 11.2 12.3999 11.2H11.5999V8.49703C11.5999 7.86051 11.347 7.25006 10.897 6.79998L8.3999 4.30292C7.94982 3.85283 7.33937 3.59998 6.70285 3.59998H5.5999V2.79998Z"
+              fill="#626C83"
+            />
+            <path
+              d="M3.5999 4.79998C2.93716 4.79998 2.3999 5.33723 2.3999 5.99998V13.2C2.3999 13.8627 2.93716 14.4 3.5999 14.4H9.1999C9.86264 14.4 10.3999 13.8627 10.3999 13.2V8.49703C10.3999 8.17877 10.2735 7.87355 10.0484 7.6485L7.55137 5.15145C7.32633 4.9264 7.02111 4.79998 6.70285 4.79998H3.5999Z"
+              fill="#626C83"
+            />
+          </svg>
+        </div>
       </div>
       <div class="tw-flex tw-justify-center tw-items-center tw-mt-8">
         <span class="tw-w-full tw-border-b tw-border-b-gray-border"></span
@@ -60,23 +77,49 @@
         ><span class="tw-w-full tw-border-b tw-border-b-gray-border"></span>
       </div>
       <TextInput
+        v-if="showEmailInput"
         class="tw-mt-8"
         name="email"
         id="email"
         label="Email"
         placeHolder="example@email.com"
         type="email"
+        :clearTextData="clearTextData"
         :showLabel="true"
         :disabled="baseStore.btnLoading"
         @set="setEmail"
         @valid="updateValidResult"
       />
+      <p
+        v-if="!showEmailInput"
+        class="tw-text-white tw-text-center tw-bg-red tw-rounded-2xl tw-py-3 tw-mt-8"
+      >
+        Please use your invite link to add more members
+      </p>
+      <div v-if="payload.length > 0" class="tw-flex tw-flex-wrap tw-mt-2">
+        <div
+          v-for="(email, index) in payload"
+          :key="email"
+          class="tw-text-white tw-p-2"
+        >
+          <div
+            class="tw-relative tw-flex tw-items-center tw-text-sm tw-bg-purple tw-rounded tw-pl-2 tw-pr-6 tw-py-1"
+          >
+            {{ email }}
+            <CloseGrayIcon
+              class="tw-absolute tw-top-[0.2rem] tw-right-[0.2rem] tw-bg-white tw-rounded tw-cursor-pointer tw-ml-1"
+              @click="removeEmail(index)"
+            />
+          </div>
+        </div>
+      </div>
       <Btn
         class="tw-mt-12"
         title="Finish Setup"
         :btnStyle="baseStore.blueBtn"
         :disabled="baseStore.btnLoading"
         :loading="baseStore.btnLoading"
+        @click="addMembers"
       />
       <div class="tw-flex tw-justify-center tw-items-center tw-mt-4">
         <router-link
@@ -94,15 +137,71 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
+import { useAuthStore } from "@/stores/authStore.js";
 import TextInput from "@/components/general/TextInput.vue";
-import SelectInput from "@/components/general/SelectInput.vue";
+import { getItem } from "@/utils/storage";
 import Btn from "@/components/general/Btn.vue";
+import CloseGrayIcon from "@/components/icons/CloseGrayIcon.vue";
 
 const router = useRouter();
 const baseStore = useBaseStore();
-const validResults = ref([{ email: false, password: false }]);
+const authStore = useAuthStore();
+const validResults = ref([{ email: false }]);
 const formValid = ref(false);
-const payload = ref({});
+const clearTextData = ref(false);
+const showEmailInput = ref(true);
+const email = ref("");
+const inviteLinkUrl = ref();
+const payload = ref([]);
+const inviteLink = getItem("inviteLink");
+
+const addMembers = () => {
+  setTimeout(async () => {
+    if (!formValid.value) return;
+    const userId = getItem("userId");
+    authStore.addMembers({ invitedTeamList: payload.value }, userId);
+  }, 500);
+};
+
+const copyText = () => {
+  inviteLinkUrl.value.focus();
+  // TODO: Look for an alternative to execCommand
+  document.execCommand("copy");
+};
+
+const setEmail = (text) => {
+  email.value = text;
+};
+
+const removeEmail = (index) => {
+  payload.value.splice(index, 1);
+  showEmailInput.value = true;
+};
+
+const setFormValid = () => {
+  formValid.value = validResults.value.some((result) => {
+    if (result.email === true) return true;
+  });
+};
+
+const updateValidResult = (emittedPayload) => {
+  switch (emittedPayload.type) {
+    case "email":
+      validResults.value.find((obj) => (obj.email = emittedPayload.value));
+      if (emittedPayload.value) {
+        payload.value.push(email.value);
+        clearTextData.value = !clearTextData.value;
+        setTimeout(() => {
+          if (payload.value.length === 5) showEmailInput.value = false;
+        }, 500);
+      }
+      break;
+
+    default:
+      break;
+  }
+  setFormValid();
+};
 </script>
 
 <style lang="scss" scoped></style>
