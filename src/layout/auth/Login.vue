@@ -69,7 +69,7 @@ import Btn from "@/components/general/Btn.vue";
 const authStore = useAuthStore();
 
 const baseStore = useBaseStore();
-const validResults = ref([{ email: false, password: false }]);
+const validResults = ref([{ email: false }]);
 const formValid = ref(false);
 const payload = ref({});
 const passwordInputType = ref("password");
@@ -92,7 +92,7 @@ const setPassword = (text) => {
 
 const setFormValid = () => {
   formValid.value = validResults.value.some((result) => {
-    if (result.email === true && result.password === true) return true;
+    if (result.email === true) return true;
   });
 };
 
@@ -100,9 +100,6 @@ const updateValidResult = (payload) => {
   switch (payload.type) {
     case "email":
       validResults.value.find((obj) => (obj.email = payload.value));
-      break;
-    case "password":
-      validResults.value.find((obj) => (obj.password = payload.value));
       break;
 
     default:
