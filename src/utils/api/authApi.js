@@ -32,4 +32,8 @@ export default {
   resetPassword(payload) {
     return client.post(`/auth/reset-password`, payload);
   },
+
+  addMembers(payload, userId) {
+    return client.patch(`/auth/register/invite-team/${userId}`, payload);
+  },
 };
