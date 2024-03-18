@@ -3,7 +3,7 @@
     <div
       class="notification tw-fixed tw-border-l-4 tw-top-4 tw-right-2 tw-shadow-lg tw-pr-2 tw-z-50"
       :class="{
-        'tw-border-green-bg3': baseStore.toast.type == 'success',
+        'tw-border-green': baseStore.toast.type == 'success',
         'tw-border-red': baseStore.toast.type == 'error',
         'tw-border-blue': baseStore.toast.type == 'info',
       }"
