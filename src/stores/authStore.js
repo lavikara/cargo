@@ -98,7 +98,7 @@ export const useAuthStore = defineStore({
         baseStore.showToast({
           description: data?.message,
           display: true,
-          type: "",
+          type: "success",
         });
 
         router.push({ name: "Login" });
@@ -122,7 +122,7 @@ export const useAuthStore = defineStore({
         baseStore.showToast({
           description: data?.message,
           display: true,
-          type: "",
+          type: "success",
         });
 
         router.push({ name: "ForgotPasswordSuccess" });
@@ -145,7 +145,7 @@ export const useAuthStore = defineStore({
         baseStore.showToast({
           description: data?.message,
           display: true,
-          type: "",
+          type: "success",
         });
 
         setTimeout(() => {
@@ -172,7 +172,7 @@ export const useAuthStore = defineStore({
         baseStore.showToast({
           description: data?.message,
           display: true,
-          type: "",
+          type: "success",
         });
         router.push({ name: "Login" });
         return true;
