@@ -195,6 +195,11 @@ export const useAuthStore = defineStore({
         const response = await authApi.addMembers(payload, userId);
         const { data } = response;
         baseStore.updateBtnLoadingState(false);
+        baseStore.showToast({
+          description: data?.message,
+          display: true,
+          type: "success",
+        });
         router.push({ name: "Login" });
         return true;
       } catch (error) {
