@@ -69,17 +69,17 @@ const router = createRouter({
               "@/layout/auth/ForgotPassword.vue"
             ),
         },
+        // {
+        //   path: "forgot-password/success",
+        //   name: "ForgotPasswordSuccess",
+        //   component: () =>
+        //     import(
+        //       /* webpackChunkName: "auth" */
+        //       "@/layout/auth/ForgotPasswordSuccess.vue"
+        //     ),
+        // },
         {
-          path: "forgot-password/success",
-          name: "ForgotPasswordSuccess",
-          component: () =>
-            import(
-              /* webpackChunkName: "auth" */
-              "@/layout/auth/ForgotPasswordSuccess.vue"
-            ),
-        },
-        {
-          path: "reset-password",
+          path: "reset-password/:token/:email",
           name: "ResetPassword",
           component: () =>
             import(
