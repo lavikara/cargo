@@ -205,7 +205,7 @@ const addKyc = () => {
     if (!formValid.value) return;
 
     const userId = route.params.userId;
-    // authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
+    authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
   }, 500);
 };
 
