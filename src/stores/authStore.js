@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useBaseStore } from "./baseStore";
 import errorHandler from "@/utils/errorHandler";
 import authApi from "@/utils/api/authApi";
-import { setItem } from "@/utils/storage";
+import { clearStorage, setItem } from "@/utils/storage";
 import router from "@/router";
 
 export const useAuthStore = defineStore({
@@ -202,6 +202,8 @@ export const useAuthStore = defineStore({
           display: true,
           type: "success",
         });
+
+        clearStorage();
         router.push({ name: "Login" });
         return true;
       } catch (error) {

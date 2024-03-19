@@ -122,12 +122,12 @@
         @click="addMembers"
       />
       <div class="tw-flex tw-justify-center tw-items-center tw-mt-4">
-        <router-link
-          :to="{ name: 'Login' }"
+        <span
+          @click="handleSkip"
           class="tw-font-medium tw-cursor-pointer hover:tw-text-blue tw-transition-all tw-duration-300"
         >
           Skip
-        </router-link>
+        </span>
       </div>
     </div>
   </div>
@@ -139,7 +139,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import TextInput from "@/components/general/TextInput.vue";
-import { getItem } from "@/utils/storage";
+import { clearStorage, getItem } from "@/utils/storage";
 import Btn from "@/components/general/Btn.vue";
 import CloseGrayIcon from "@/components/icons/CloseGrayIcon.vue";
 
@@ -155,6 +155,11 @@ const email = ref("");
 const inviteLinkUrl = ref();
 const payload = ref([]);
 const inviteLink = getItem("inviteLink");
+
+const handleSkip = () => {
+  clearStorage();
+  router.push({ name: "Login" });
+};
 
 const addMembers = () => {
   setTimeout(async () => {
