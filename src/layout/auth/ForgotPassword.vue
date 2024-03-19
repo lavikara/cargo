@@ -46,12 +46,13 @@
 
 <script setup>
 import { ref } from "vue";
+
+import router from "@/router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 
 import TextInput from "@/components/general/TextInput.vue";
 import Btn from "@/components/general/Btn.vue";
-import router from "@/router";
 
 const authStore = useAuthStore();
 const baseStore = useBaseStore();
@@ -63,10 +64,7 @@ const payload = ref({});
 const resetPassword = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
-
-    router.push({ name: "ForgotPasswordSuccess" });
-
-    // authStore.login(payload.value);
+    authStore.forgotPassword(payload.value);
   }, 500);
 };
 

@@ -6,8 +6,8 @@
     viewBox="0 0 400 200"
   >
     <circle
-      fill="#ffffff"
-      stroke="#ffffff"
+      :fill="props.fillColor"
+      :stroke="props.strokeColor"
       stroke-width="2"
       r="40"
       cx="50"
@@ -24,8 +24,8 @@
       ></animate>
     </circle>
     <circle
-      fill="#ffffff"
-      stroke="#ffffff"
+      :fill="props.fillColor"
+      :stroke="props.strokeColor"
       stroke-width="2"
       r="40"
       cx="200"
@@ -42,8 +42,8 @@
       ></animate>
     </circle>
     <circle
-      fill="#ffffff"
-      stroke="#ffffff"
+      :fill="props.fillColor"
+      :stroke="props.strokeColor"
       stroke-width="2"
       r="40"
       cx="350"
@@ -61,3 +61,10 @@
     </circle>
   </svg>
 </template>
+
+<script setup>
+const props = defineProps({
+  fillColor: { type: String, default: () => "#ffffff" },
+  strokeColor: { type: String, default: () => "#ffffff" },
+});
+</script>

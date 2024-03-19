@@ -30,26 +30,9 @@
       >
         https://
       </span>
+
       <svg
-        v-if="copy"
-        class="tw-absolute tw-right-6 tw-bottom-4 tw-cursor-pointer"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M5.5999 2.79998C5.5999 2.13723 6.13716 1.59998 6.7999 1.59998H9.90285C10.2211 1.59998 10.5263 1.7264 10.7514 1.95145L13.2484 4.4485C13.4735 4.67355 13.5999 4.97877 13.5999 5.29703V9.99998C13.5999 10.6627 13.0626 11.2 12.3999 11.2H11.5999V8.49703C11.5999 7.86051 11.347 7.25006 10.897 6.79998L8.3999 4.30292C7.94982 3.85283 7.33937 3.59998 6.70285 3.59998H5.5999V2.79998Z"
-          fill="#626C83"
-        />
-        <path
-          d="M3.5999 4.79998C2.93716 4.79998 2.3999 5.33723 2.3999 5.99998V13.2C2.3999 13.8627 2.93716 14.4 3.5999 14.4H9.1999C9.86264 14.4 10.3999 13.8627 10.3999 13.2V8.49703C10.3999 8.17877 10.2735 7.87355 10.0484 7.6485L7.55137 5.15145C7.32633 4.9264 7.02111 4.79998 6.70285 4.79998H3.5999Z"
-          fill="#626C83"
-        />
-      </svg>
-      <svg
-        v-if="name === 'password'"
+        v-if="name === 'password' || name === 'confirmPassword'"
         class="tw-absolute tw-right-6 tw-bottom-4 tw-cursor-pointer"
         width="16"
         height="16"
@@ -110,8 +93,8 @@ const props = defineProps({
   validatePassword: { type: Boolean, default: () => false },
   readonly: { type: Boolean, default: () => false },
   disabled: { type: Boolean, default: () => false },
-  minLength: { type: Number, default: () => 3 },
-  minLengthLabel: { type: String, default: () => "three" },
+  minLength: { type: Number, default: () => 2 },
+  minLengthLabel: { type: String, default: () => "two" },
 });
 
 let textData = ref("");
@@ -193,9 +176,7 @@ const validate = () => {
 
 const urlValidation = () => {
   textDataValid.value = validateWebsite(textData.value);
-  console.log("Url value");
-  console.log(textDataValid.value);
-  if (textDataValid.value === null) {
+  if (!textDataValid.value) {
     showError.value = true;
     errorMsg.value = "Url is invalid";
     emit("valid", { type: "website", value: false });
@@ -206,13 +187,13 @@ const urlValidation = () => {
 
 const passwordValidation = () => {
   textDataValid.value = textData.value.trim().length;
-  emit("valid", { type: "passwordReset", value: false });
-
   if (textDataValid.value === 0 && textData.value.length > 0) {
+    emit("valid", { type: "passwordReset", value: false });
     emit("valid", { type: "password", value: false });
     showError.value = true;
     errorMsg.value = "Password is invalid";
   } else if (textDataValid.value > 0 && props.validatePassword === true) {
+    emit("valid", { type: "passwordReset", value: false });
     if (textData.value.length < 8) {
       showError.value = true;
       errorMsg.value = "minimum of eight characters";
@@ -260,9 +241,8 @@ const passwordValidation = () => {
     } else {
       emit("valid", { type: "passwordMatch", value: true });
     }
-  } else if (textDataValid.value >= 8) {
-    emit("valid", { type: "password", value: true });
   } else {
+    emit("valid", { type: "passwordReset", value: false });
     emit("valid", { type: "password", value: false });
   }
 };

@@ -65,9 +65,7 @@ const requestToken = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
 
-    router.push({ name: "ForgotPasswordSuccess" });
-
-    // authStore.login(payload.value);
+    authStore.requestEmailToken(payload.value?.email);
   }, 500);
 };
 

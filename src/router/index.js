@@ -69,17 +69,17 @@ const router = createRouter({
               "@/layout/auth/ForgotPassword.vue"
             ),
         },
+        // {
+        //   path: "forgot-password/success",
+        //   name: "ForgotPasswordSuccess",
+        //   component: () =>
+        //     import(
+        //       /* webpackChunkName: "auth" */
+        //       "@/layout/auth/ForgotPasswordSuccess.vue"
+        //     ),
+        // },
         {
-          path: "forgot-password/success",
-          name: "ForgotPasswordSuccess",
-          component: () =>
-            import(
-              /* webpackChunkName: "auth" */
-              "@/layout/auth/ForgotPasswordSuccess.vue"
-            ),
-        },
-        {
-          path: "reset-password",
+          path: "reset-password/:token/:email",
           name: "ResetPassword",
           component: () =>
             import(
@@ -88,13 +88,14 @@ const router = createRouter({
             ),
         },
         {
-          path: "verify-email",
+          path: "verify-email/:token/:email",
           name: "VerifyEmail",
           component: () =>
             import(
               /* webpackChunkName: "auth" */
               "@/layout/auth/VerifyEmail.vue"
             ),
+          props: true,
         },
         {
           path: "verify-email/resend",

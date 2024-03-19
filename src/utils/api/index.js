@@ -1,4 +1,6 @@
-export const baseUrl = "https://cargostation.onrender.com";
+import axios from "axios";
+import { getItem } from "../storage";
+
 // export const baseUrl = "http://localhost:5000";
 
 export const getHeaders = () => {
@@ -8,3 +10,28 @@ export const getHeaders = () => {
 
   return headers;
 };
+
+const client = axios.create({
+  baseURL: "https://cargostation.onrender.com",
+
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+client.interceptors.request.use(
+  (config) => {
+    const token = getItem("token") || "";
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    Promise.reject(error);
+  }
+);
+
+export default client;
