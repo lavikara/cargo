@@ -130,7 +130,7 @@ export function validateWebsite(website) {
   const strippedHttpsDomain = website.trim().toLowerCase().substring(0, 8);
 
   let pattern =
-    /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
+    /(https?:\/\/www\.|https?:\/\/)?[a-zA-Z]+(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https?:\/\/www\.|https?:\/\/)?[a-zA-Z]+(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https?:\/\/www\.|https?:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
 
   if (startsWithHttps) {
     if (strippedHttpsDomain !== httpsPrefix) return false;
@@ -146,36 +146,3 @@ export function validateWebsite(website) {
 
   return pattern.test(website);
 }
-
-// export const validateWebsite = (website) => {
-//   const httpPrefix = "http://";
-//   const httpsPrefix = "https://";
-//   let newUrl = "";
-
-//   // const hasHttps = website.trim().toLowerCase().startsWith("https://");
-//   const startsWithHttp = website.trim().toLowerCase().startsWith("http");
-//   const strippedHttpDomain = website.trim().toLowerCase().substring(0, 7);
-
-//   const startsWithHttps = website.trim().toLowerCase().startsWith("https");
-//   const strippedHttpsDomain = website.trim().toLowerCase().substring(0, 8);
-//   console.log("website", website);
-//   console.log("strippedHttpsDomain", strippedHttpsDomain);
-
-//   if (startsWithHttps && strippedHttpsDomain !== httpsPrefix) {
-//     console.log("https is invalid");
-//     return false;
-//   }
-
-//   if (startsWithHttp && strippedHttpDomain !== httpPrefix) {
-//     console.log("http is invalid");
-//     return false;
-//   }
-
-//   newUrl = website;
-//   console.log("newUrl", newUrl);
-
-//   let pattern =
-//     /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
-
-//   return pattern.test(newUrl);
-// };
