@@ -65,27 +65,30 @@
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
               :class="{
-                'tw-text-white tw-bg-blue !tw-border-blue': teamSize === 5,
+                'tw-text-white tw-bg-blue !tw-border-blue':
+                  teamSize === '1 to 5',
               }"
-              @click="setTeamSize(5)"
+              @click="setTeamSize('1 to 5')"
             >
               1 to 5
             </div>
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
               :class="{
-                'tw-text-white tw-bg-blue !tw-border-blue': teamSize === 10,
+                'tw-text-white tw-bg-blue !tw-border-blue':
+                  teamSize === '6 to 10',
               }"
-              @click="setTeamSize(10)"
+              @click="setTeamSize('6 to 10')"
             >
               6 to 10
             </div>
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
               :class="{
-                'tw-text-white tw-bg-blue !tw-border-blue': teamSize === 30,
+                'tw-text-white tw-bg-blue !tw-border-blue':
+                  teamSize === '11 to 30',
               }"
-              @click="setTeamSize(30)"
+              @click="setTeamSize('11 to 30')"
             >
               11 to 30
             </div>
