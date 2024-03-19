@@ -52,7 +52,7 @@ const router = createRouter({
             ),
         },
         {
-          path: "add-member",
+          path: "add-member/:userId",
           name: "AddMember",
           component: () =>
             import(

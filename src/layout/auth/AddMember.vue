@@ -135,7 +135,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import TextInput from "@/components/general/TextInput.vue";
@@ -143,6 +143,7 @@ import { getItem } from "@/utils/storage";
 import Btn from "@/components/general/Btn.vue";
 import CloseGrayIcon from "@/components/icons/CloseGrayIcon.vue";
 
+const route = useRoute();
 const router = useRouter();
 const baseStore = useBaseStore();
 const authStore = useAuthStore();
@@ -158,7 +159,8 @@ const inviteLink = getItem("inviteLink");
 const addMembers = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
-    const userId = getItem("userId");
+
+    const userId = route.params.userId;
     authStore.addMembers({ invitedTeamList: payload.value }, userId);
   }, 500);
 };

@@ -78,10 +78,14 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.submitKyc(payload, userId);
         const { data } = response;
-        setItem("inviteLink", data?.user?.teamInviteLink);
+        setItem("inviteLink", data?.updatedData?.teamInviteLink);
         this.user = data?.user;
+
         baseStore.updateBtnLoadingState(false);
-        router.push({ name: "AddMember" });
+        router.push({
+          name: "AddMember",
+          params: { userId },
+        });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
