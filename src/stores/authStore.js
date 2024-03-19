@@ -46,7 +46,7 @@ export const useAuthStore = defineStore({
         this.user = data?.user;
         setItem("userId", data?.user?.userId);
         baseStore.updateBtnLoadingState(false);
-        router.push({ name: "Kyc" });
+        router.push({ name: "Kyc", params: { userId: data?.user?.userId } });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
