@@ -152,15 +152,15 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import countryRegionData from "@/utils/js/countryRegionData.js";
 import TextInput from "@/components/general/TextInput.vue";
 import SelectInput from "@/components/general/SelectInput.vue";
 import Btn from "@/components/general/Btn.vue";
-import { getItem } from "@/utils/storage";
 
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const baseStore = useBaseStore();
@@ -204,8 +204,8 @@ const addKyc = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
 
-    const userId = getItem("userId");
-    authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
+    const userId = route.params.userId;
+    // authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
   }, 500);
 };
 
