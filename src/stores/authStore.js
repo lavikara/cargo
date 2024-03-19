@@ -44,7 +44,7 @@ export const useAuthStore = defineStore({
         const response = await authApi.register(payload);
         const { data } = response;
         this.user = data?.user;
-        setItem("userId", data?.user?.userId);
+
         baseStore.updateBtnLoadingState(false);
         router.push({ name: "Kyc", params: { userId: data?.user?.userId } });
         return true;
@@ -97,7 +97,6 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.forgotPassword(payload);
         const { data } = response;
-        setItem("email", data?.user?.email);
 
         baseStore.updateBtnLoadingState(false);
         baseStore.showToast({
