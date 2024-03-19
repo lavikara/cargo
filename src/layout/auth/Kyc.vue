@@ -54,9 +54,21 @@
           type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
+        />
+
+        <TextInput
+          class="tw-mt-4"
+          name="website2"
+          id="website2"
+          label="Company Website"
+          placeHolder="www.company.com"
+          type="text"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
           @set="setCompanyWebsite"
           @valid="updateValidResult"
         />
+
         <div class="tw-mt-4">
           <label for="team size" class="tw-font-medium tw-whitespace-nowrap">
             Team Size
