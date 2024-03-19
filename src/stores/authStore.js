@@ -122,7 +122,6 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.requestEmailToken(email);
         const { data } = response;
-        setItem("email", data?.user?.email);
         baseStore.updateBtnLoadingState(false);
         baseStore.showToast({
           description: data?.message,
@@ -130,7 +129,7 @@ export const useAuthStore = defineStore({
           type: "success",
         });
 
-        router.push({ name: "ForgotPasswordSuccess" });
+        router.push({ name: "Login" });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
