@@ -24,7 +24,8 @@
           @set="setEmail"
           @valid="updateValidResult"
         />
-        <TextInput
+
+        <PasswordInput
           class="tw-mt-4"
           name="password"
           id="password"
@@ -38,52 +39,7 @@
           @set="setPassword"
           @valid="updateValidResult"
         />
-        <div class="tw-grid tw-grid-cols-2 tw-mt-3 tw-px-2">
-          <div class="tw-flex tw-items-center">
-            <CheckBlueIcon v-if="validResults[0].hasEightOrMoreCharacters" />
-            <span
-              v-if="!validResults[0].hasEightOrMoreCharacters"
-              class="tw-mr-2"
-            >
-              &#8226;
-            </span>
-            <p class="tw-text-gray tw-text-xs">At least 8 characters</p>
-          </div>
-          <div class="tw-flex tw-items-center">
-            <CheckBlueIcon v-if="validResults[0].hasNumber" />
-            <span v-if="!validResults[0].hasNumber" class="tw-mr-2">
-              &#8226;
-            </span>
-            <p class="tw-text-gray tw-text-xs">At least one number</p>
-          </div>
-        </div>
-        <div class="tw-grid tw-grid-cols-2 tw-mt-2 tw-px-2">
-          <div class="tw-flex tw-items-center">
-            <CheckBlueIcon v-if="validResults[0].hasUpperCase" />
-            <span v-if="!validResults[0].hasUpperCase" class="tw-mr-2">
-              &#8226;
-            </span>
-            <p class="tw-text-gray tw-text-xs">At least one uppercase letter</p>
-          </div>
-          <div class="tw-flex tw-items-center">
-            <CheckBlueIcon v-if="validResults[0].hasSpecialCharacters" />
-            <span v-if="!validResults[0].hasSpecialCharacters" class="tw-mr-2">
-              &#8226;
-            </span>
-            <p class="tw-text-gray tw-text-xs">
-              At least one special character
-            </p>
-          </div>
-        </div>
-        <div class="tw-grid tw-grid-cols-2 tw-mt-2 tw-px-2">
-          <div class="tw-flex tw-items-center">
-            <CheckBlueIcon v-if="validResults[0].hasLowerCase" />
-            <span v-if="!validResults[0].hasLowerCase" class="tw-mr-2">
-              &#8226;
-            </span>
-            <p class="tw-text-gray tw-text-xs">At least one lowercase letter</p>
-          </div>
-        </div>
+
         <Btn
           class="tw-mt-8"
           title="Create Account"
@@ -112,6 +68,7 @@ import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import CheckBlueIcon from "@/components/icons/CheckBlueIcon.vue";
 import TextInput from "@/components/general/TextInput.vue";
+import PasswordInput from "@/components/general/PasswordInput.vue";
 import Btn from "@/components/general/Btn.vue";
 
 const router = useRouter();
