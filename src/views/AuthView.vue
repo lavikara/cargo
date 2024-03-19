@@ -7,7 +7,7 @@
         <div class="md:tw-w-[28rem] lg:tw-w-[26rem] md:tw-mx-auto">
           <img
             class="tw-max-w-[12rem] tw-pt-20"
-            src="@/assets/img/cargostation.png"
+            src="@/assets/img/CargoStationTempLogo.jpg"
             loading="lazy"
             alt="cargo station"
           />
