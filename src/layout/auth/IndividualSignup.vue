@@ -49,7 +49,22 @@
           @valid="updateValidResult"
         />
 
-        <TextInput
+        <!-- <TextInput
+          class="tw-mt-4"
+          name="password"
+          id="password"
+          label="Password"
+          placeHolder="Password"
+          :type="passwordInputType"
+          :validatePassword="true"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @showPassword="showPassword"
+          @set="setPassword"
+          @valid="updateValidResult"
+        /> -->
+
+        <PasswordInput
           class="tw-mt-4"
           name="password"
           id="password"
@@ -136,6 +151,7 @@ import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import TextInput from "@/components/general/TextInput.vue";
+import PasswordInput from "@/components/general/PasswordInput.vue";
 import CheckBlueIcon from "@/components/icons/CheckBlueIcon.vue";
 import Btn from "@/components/general/Btn.vue";
 

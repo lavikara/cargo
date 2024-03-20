@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useBaseStore } from "./baseStore";
 import errorHandler from "@/utils/errorHandler";
 import authApi from "@/utils/api/authApi";
-import { setItem } from "@/utils/storage";
+import { clearStorage, setItem } from "@/utils/storage";
 import router from "@/router";
 
 export const useAuthStore = defineStore({
@@ -44,9 +44,9 @@ export const useAuthStore = defineStore({
         const response = await authApi.register(payload);
         const { data } = response;
         this.user = data?.user;
-        setItem("userId", data?.user?.userId);
+
         baseStore.updateBtnLoadingState(false);
-        router.push({ name: "Kyc" });
+        router.push({ name: "Kyc", params: { userId: data?.user?.userId } });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
@@ -78,10 +78,13 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.submitKyc(payload, userId);
         const { data } = response;
-        setItem("inviteLink", data?.user?.teamInviteLink);
+        setItem("companyDetails", data?.updatedData);
         this.user = data?.user;
         baseStore.updateBtnLoadingState(false);
-        router.push({ name: "AddMember" });
+        router.push({
+          name: "AddMember",
+          params: { userId },
+        });
         return true;
       } catch (error) {
         baseStore.updateBtnLoadingState(false);
@@ -97,7 +100,6 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.forgotPassword(payload);
         const { data } = response;
-        setItem("email", data?.user?.email);
 
         baseStore.updateBtnLoadingState(false);
         baseStore.showToast({
@@ -199,6 +201,8 @@ export const useAuthStore = defineStore({
           display: true,
           type: "success",
         });
+
+        clearStorage();
         router.push({ name: "Login" });
         return true;
       } catch (error) {

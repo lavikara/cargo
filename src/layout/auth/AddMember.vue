@@ -48,7 +48,7 @@
             ref="inviteLinkUrl"
             class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-transition-all tw-duration-300 focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1"
             type="text"
-            :value="inviteLink"
+            :value="inviteLink.teamInviteLink"
             @focus="$event.target.select()"
           />
           <svg
@@ -90,18 +90,19 @@
         @set="setEmail"
         @valid="updateValidResult"
       />
+
       <p
         v-if="!showEmailInput"
         class="tw-text-white tw-text-center tw-bg-red tw-rounded-2xl tw-py-3 tw-mt-8"
       >
         Please use your invite link to add more members
       </p>
-      <div v-if="payload.length > 0" class="tw-flex tw-flex-wrap tw-mt-2">
-        <div
-          v-for="(email, index) in payload"
-          :key="email"
-          class="tw-text-white tw-p-2"
-        >
+      <div
+        v-if="payload.length > 0"
+        class="tw-relative tw-flex tw-flex-wrap tw-text-white tw-border tw-border-white tw-rounded-2xl tw-mt-6"
+        :class="{ '!tw-border-red': duplicateMailError }"
+      >
+        <div v-for="(email, index) in payload" :key="email" class="tw-p-2">
           <div
             class="tw-relative tw-flex tw-items-center tw-text-sm tw-bg-purple tw-rounded tw-pl-2 tw-pr-6 tw-py-1"
           >
@@ -112,6 +113,12 @@
             />
           </div>
         </div>
+        <p
+          v-if="duplicateMailError"
+          class="tw-absolute tw--top-4 tw-right-0 tw-text-red tw-text-xs"
+        >
+          Duplicate mail
+        </p>
       </div>
       <Btn
         class="tw-mt-12"
@@ -122,12 +129,12 @@
         @click="addMembers"
       />
       <div class="tw-flex tw-justify-center tw-items-center tw-mt-4">
-        <router-link
-          :to="{ name: 'Login' }"
+        <span
+          @click="handleSkip"
           class="tw-font-medium tw-cursor-pointer hover:tw-text-blue tw-transition-all tw-duration-300"
         >
           Skip
-        </router-link>
+        </span>
       </div>
     </div>
   </div>
@@ -135,30 +142,37 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import TextInput from "@/components/general/TextInput.vue";
-import { getItem } from "@/utils/storage";
+import { clearStorage, getItem } from "@/utils/storage";
 import Btn from "@/components/general/Btn.vue";
 import CloseGrayIcon from "@/components/icons/CloseGrayIcon.vue";
 
+const route = useRoute();
 const router = useRouter();
 const baseStore = useBaseStore();
 const authStore = useAuthStore();
 const validResults = ref([{ email: false }]);
 const formValid = ref(false);
 const clearTextData = ref(false);
+const duplicateMailError = ref(false);
 const showEmailInput = ref(true);
 const email = ref("");
 const inviteLinkUrl = ref();
 const payload = ref([]);
-const inviteLink = getItem("inviteLink");
+const inviteLink = getItem("companyDetails");
+
+const handleSkip = () => {
+  clearStorage();
+  router.push({ name: "Login" });
+};
 
 const addMembers = () => {
   setTimeout(async () => {
     if (!formValid.value) return;
-    const userId = getItem("userId");
+    const userId = route.params.userId;
     authStore.addMembers({ invitedTeamList: payload.value }, userId);
   }, 500);
 };
@@ -170,7 +184,8 @@ const copyText = () => {
 };
 
 const setEmail = (text) => {
-  email.value = text;
+  email.value = text.toLowerCase();
+  duplicateMailError.value = false;
 };
 
 const removeEmail = (index) => {
@@ -189,7 +204,12 @@ const updateValidResult = (emittedPayload) => {
     case "email":
       validResults.value.find((obj) => (obj.email = emittedPayload.value));
       if (emittedPayload.value) {
-        payload.value.push(email.value);
+        const duplicateMail = payload.value.includes(email.value);
+        if (!duplicateMail) {
+          payload.value.push(email.value);
+        } else {
+          duplicateMailError.value = true;
+        }
         clearTextData.value = !clearTextData.value;
         setTimeout(() => {
           if (payload.value.length === 5) showEmailInput.value = false;

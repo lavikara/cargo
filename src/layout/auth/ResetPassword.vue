@@ -11,84 +11,60 @@
       </p>
 
       <p class="tw-text-sm tw-mb-1 tw-text-gray">
-        In order to protect your account, make sure your password:
+        In order to protect your account, make sure your password has:
       </p>
-      <!-- 
-      <ul class="tw-list-disc">
-        <li>
-          <p class="tw-text-sm tw-mb-1 tw-text-gray">
-            Is longer than 8 characters
-          </p>
-        </li>
-        <li>
-          <p class="tw-text-sm tw-mb-1 tw-text-gray">
-            Does not match or significantly contain your username e.g do not
-            user 'username123'
-          </p>
-        </li>
-      </ul> -->
-      <div class="tw-grid tw-grid-cols-2 tw-mt-3 tw-px-2">
-        <div class="tw-flex tw-items-center">
+      <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+        <div class="tw-flex tw-items-center tw-gap-1 tw-pt-4">
           <CheckBlueIcon v-if="validResults[0].hasEightOrMoreCharacters" />
-          <span
+          <CloseRedIcon
             v-if="!validResults[0].hasEightOrMoreCharacters"
-            class="tw-mr-2"
-          >
-            &#8226;
-          </span>
+            fillColor="red"
+          />
           <p class="tw-text-gray tw-text-xs">At least 8 characters</p>
         </div>
-        <div class="tw-flex tw-items-center">
+        <div class="tw-flex tw-items-center tw-gap-1 tw-pt-4">
           <CheckBlueIcon v-if="validResults[0].hasNumber" />
-          <span v-if="!validResults[0].hasNumber" class="tw-mr-2">
-            &#8226;
-          </span>
+          <CloseRedIcon v-if="!validResults[0].hasNumber" fillColor="red" />
           <p class="tw-text-gray tw-text-xs">At least one number</p>
         </div>
-      </div>
-      <div class="tw-grid tw-grid-cols-2 tw-mt-2 tw-px-2">
-        <div class="tw-flex tw-items-center">
+
+        <div class="tw-flex tw-items-center tw-gap-1">
           <CheckBlueIcon v-if="validResults[0].hasUpperCase" />
-          <span v-if="!validResults[0].hasUpperCase" class="tw-mr-2">
-            &#8226;
-          </span>
+          <CloseRedIcon v-if="!validResults[0].hasUpperCase" fillColor="red" />
           <p class="tw-text-gray tw-text-xs">At least one uppercase letter</p>
         </div>
-        <div class="tw-flex tw-items-center">
+
+        <div class="tw-flex tw-items-center tw-gap-1">
           <CheckBlueIcon v-if="validResults[0].hasSpecialCharacters" />
-          <span v-if="!validResults[0].hasSpecialCharacters" class="tw-mr-2">
-            &#8226;
-          </span>
+          <CloseRedIcon
+            v-if="!validResults[0].hasSpecialCharacters"
+            fillColor="red"
+          />
           <p class="tw-text-gray tw-text-xs">At least one special character</p>
         </div>
-      </div>
-      <div class="tw-grid tw-grid-cols-2 tw-mt-2 tw-px-2">
-        <div class="tw-flex tw-items-center">
+
+        <div class="tw-flex tw-items-center tw-gap-1">
           <CheckBlueIcon v-if="validResults[0].hasLowerCase" />
-          <span v-if="!validResults[0].hasLowerCase" class="tw-mr-2">
-            &#8226;
-          </span>
+          <CloseRedIcon v-if="!validResults[0].hasLowerCase" fillColor="red" />
           <p class="tw-text-gray tw-text-xs">At least one lowercase letter</p>
         </div>
       </div>
-
       <form @submit.prevent="resetPassword">
-        <TextInput
+        <PasswordInput
           class="tw-mt-4"
           name="password"
           id="password"
           label="Password"
           placeHolder="Password"
-          :validatePassword="true"
           :type="passwordInputType"
+          :validatePassword="true"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
           @showPassword="showPassword"
           @set="setPassword"
           @valid="updateValidResult"
         />
-
-        <TextInput
+        <PasswordInput
           class="tw-mt-4"
           name="confirmPassword"
           id="confirmPassword"
@@ -96,11 +72,13 @@
           placeHolder="Confirm Password"
           :type="passwordInputType"
           :showLabel="true"
-          :disabled="baseStore.btnLoading"
+          :disabled="
+            baseStore.btnLoading || payload.newPassword?.length === undefined
+          "
           :passwordToConfirm="payload.newPassword"
           @showPassword="showPassword"
           @set="setConfirmPassword"
-          @valid="updateValidResult"
+          @valid="updatePasswordMatchValidResult"
         />
 
         <Btn
@@ -129,7 +107,8 @@ import { useRoute } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import CheckBlueIcon from "@/components/icons/CheckBlueIcon.vue";
-import TextInput from "@/components/general/TextInput.vue";
+import CloseRedIcon from "@/components/icons/CloseRedIcon.vue";
+import PasswordInput from "@/components/general/PasswordInput.vue";
 import Btn from "@/components/general/Btn.vue";
 
 const baseStore = useBaseStore();
@@ -179,6 +158,18 @@ const setFormValid = () => {
     )
       return true;
   });
+};
+
+const updatePasswordMatchValidResult = (payload) => {
+  switch (payload.type) {
+    case "passwordMatch":
+      validResults.value.find((obj) => (obj.passwordMatch = payload.value));
+      break;
+
+    default:
+      break;
+  }
+  setFormValid();
 };
 
 const updateValidResult = (payload) => {

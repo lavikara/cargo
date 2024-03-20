@@ -120,25 +120,29 @@ export const removeDash = (value) => {
   return splitValue.join(" ");
 };
 
-export const validateWebsite = (website) => {
-  const prefix = "https://";
-  let newUrl = "";
-
-  // const hasHttps = website.trim().toLowerCase().startsWith("https://");
+export function validateWebsite(website) {
+  const httpPrefix = "http://";
+  const httpsPrefix = "https://";
   const startsWithHttp = website.trim().toLowerCase().startsWith("http");
-  const strippedDomain = website.trim().toLowerCase().substring(0, 8);
-  if (startsWithHttp && strippedDomain !== prefix) {
-    return false;
-  } else if (startsWithHttp && strippedDomain === prefix) {
-    newUrl = website;
-  } else if (!startsWithHttp) {
-    newUrl = prefix.concat(website);
-  } else {
-    newUrl = website;
-  }
+  const strippedHttpDomain = website.trim().toLowerCase().substring(0, 7);
+
+  const startsWithHttps = website.trim().toLowerCase().startsWith("https");
+  const strippedHttpsDomain = website.trim().toLowerCase().substring(0, 8);
 
   let pattern =
-    /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
+    /(https?:\/\/www\.|https?:\/\/)?[a-zA-Z]+(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https?:\/\/www\.|https?:\/\/)?[a-zA-Z]+(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https?:\/\/www\.|https?:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
 
-  return pattern.test(newUrl);
-};
+  if (startsWithHttps) {
+    if (strippedHttpsDomain !== httpsPrefix) return false;
+
+    return pattern.test(website);
+  }
+
+  if (startsWithHttp) {
+    if (strippedHttpDomain !== httpPrefix) return false;
+
+    return pattern.test(website);
+  }
+
+  return pattern.test(website);
+}

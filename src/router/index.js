@@ -43,7 +43,7 @@ const router = createRouter({
             ),
         },
         {
-          path: "kyc",
+          path: "kyc/:userId",
           name: "Kyc",
           component: () =>
             import(
@@ -52,7 +52,7 @@ const router = createRouter({
             ),
         },
         {
-          path: "add-member",
+          path: "add-member/:userId",
           name: "AddMember",
           component: () =>
             import(

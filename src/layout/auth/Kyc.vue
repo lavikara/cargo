@@ -57,35 +57,55 @@
           @set="setCompanyWebsite"
           @valid="updateValidResult"
         />
+
+        <TextInput
+          class="tw-mt-4"
+          name="website2"
+          id="website2"
+          label="Company Website"
+          placeHolder="www.company.com"
+          type="text"
+          :showLabel="true"
+          :disabled="baseStore.btnLoading"
+          @set="setCompanyWebsite"
+          @valid="updateValidResult"
+        />
+
         <div class="tw-mt-4">
           <label for="team size" class="tw-font-medium tw-whitespace-nowrap">
             Team Size
           </label>
-          <div class="tw-flex tw-justify-between tw-mt-1">
+          <div
+            class="tw-relative tw-flex tw-justify-between tw-border tw-border-white tw-rounded-2xl tw-mt-1"
+            :class="{ '!tw-border-red ': teamSizeError }"
+          >
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
               :class="{
-                'tw-text-white tw-bg-blue !tw-border-blue': teamSize === 5,
+                'tw-text-white tw-bg-blue !tw-border-blue':
+                  teamSize === '1 to 5',
               }"
-              @click="setTeamSize(5)"
+              @click="setTeamSize('1 to 5')"
             >
               1 to 5
             </div>
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
               :class="{
-                'tw-text-white tw-bg-blue !tw-border-blue': teamSize === 10,
+                'tw-text-white tw-bg-blue !tw-border-blue':
+                  teamSize === '6 to 10',
               }"
-              @click="setTeamSize(10)"
+              @click="setTeamSize('6 to 10')"
             >
               6 to 10
             </div>
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
               :class="{
-                'tw-text-white tw-bg-blue !tw-border-blue': teamSize === 30,
+                'tw-text-white tw-bg-blue !tw-border-blue':
+                  teamSize === '11 to 30',
               }"
-              @click="setTeamSize(30)"
+              @click="setTeamSize('11 to 30')"
             >
               11 to 30
             </div>
@@ -99,6 +119,12 @@
             >
               Above 30
             </div>
+            <p
+              v-if="teamSizeError"
+              class="tw-absolute tw-right-0 tw--bottom-4 tw-text-red tw-text-xs"
+            >
+              {{ teamSizeErrorText }}
+            </p>
           </div>
         </div>
         <SelectInput
@@ -152,15 +178,15 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import countryRegionData from "@/utils/js/countryRegionData.js";
 import TextInput from "@/components/general/TextInput.vue";
 import SelectInput from "@/components/general/SelectInput.vue";
 import Btn from "@/components/general/Btn.vue";
-import { getItem } from "@/utils/storage";
 
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const baseStore = useBaseStore();
@@ -176,6 +202,8 @@ const validResults = ref([
 ]);
 const formValid = ref(false);
 const stateInputDisabled = ref(true);
+const teamSizeError = ref(false);
+const teamSizeErrorText = ref("select team size");
 const payload = ref({});
 const teamSize = ref("");
 
@@ -202,9 +230,12 @@ const stateList = computed(() => {
 
 const addKyc = () => {
   setTimeout(async () => {
+    if (validResults.value[0].teamSize === false) {
+      teamSizeError.value = true;
+    }
     if (!formValid.value) return;
 
-    const userId = getItem("userId");
+    const userId = route.params.userId;
     authStore.submitKyc({ ...payload.value, tierType: 1 }, userId);
   }, 500);
 };
@@ -229,6 +260,7 @@ const setTeamSize = (size) => {
   teamSize.value = size;
   payload.value.teamSize = size;
   validResults.value[0].teamSize = true;
+  teamSizeError.value = false;
   setFormValid();
 };
 

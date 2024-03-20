@@ -6,11 +6,16 @@
       </label>
       <input
         class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-transition-all tw-duration-300 focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1"
-        :class="{ '!tw-border-red': showError, 'tw-pl-24': name === 'website' }"
-        @input="setInput"
-        @keypress="type === 'number' || type === 'tel' ? isNumber($event) : ''"
+        :class="{
+          '!tw-border-red': showError,
+          'tw-pl-24': name === 'website',
+          '!tw-border-gray-border tw-cursor-not-allowed': disabled,
+        }"
         @keyup.enter="validate"
         @blur="validate"
+        @input="setInput"
+        @focus="setFocus(true)"
+        @focusout="setFocus(false)"
         :type="type"
         :placeholder="placeHolder"
         :required="required"
@@ -19,17 +24,6 @@
         :disabled="disabled"
         v-model="textData"
       />
-      <PlusGrayIcon
-        v-if="route.name === 'AddMember' && props.type === 'email'"
-        class="tw-absolute tw-right-4 tw-top-[2.7rem] tw-cursor-pointer"
-      />
-      <span
-        v-if="name === 'website'"
-        class="tw-absolute tw-top-[1.82rem] tw-left-[0.05rem] tw-w-20 tw-text-gray tw-bg-gray-border tw-rounded-tl-2xl tw-rounded-bl-2xl tw-px-4 tw-py-[0.75rem]"
-        :class="{ '!tw-top-[0.31rem] tw-left-[0.05rem]': !showLabel }"
-      >
-        https://
-      </span>
 
       <svg
         v-if="name === 'password' || name === 'confirmPassword'"
@@ -66,12 +60,10 @@
 
 <script setup>
 import { ref, watchEffect, onMounted } from "vue";
-import { isNumber, emailValidation, validateWebsite } from "@/utils/helpers";
 import { useRoute } from "vue-router";
-import PlusGrayIcon from "@/components/icons/PlusGrayIcon.vue";
 
 const route = useRoute();
-const emit = defineEmits(["set", "valid", "showPassword"]);
+const emit = defineEmits(["set", "valid", "inputFocus", "showPassword"]);
 
 const props = defineProps({
   inputValue: { type: String, default: () => "" },
@@ -93,8 +85,6 @@ const props = defineProps({
   validatePassword: { type: Boolean, default: () => false },
   readonly: { type: Boolean, default: () => false },
   disabled: { type: Boolean, default: () => false },
-  minLength: { type: Number, default: () => 2 },
-  minLengthLabel: { type: String, default: () => "two" },
 });
 
 let textData = ref("");
@@ -102,10 +92,20 @@ let textDataValid = ref();
 let showError = ref(false);
 let errorMsg = ref("");
 
+let hasLowerCase = ref(false);
+let hasUpperCase = ref(false);
+let hasNumber = ref(false);
+let hasSpecialCharacters = ref(false);
+let hasEightOrMoreCharacters = ref(false);
+
 onMounted(() => {
   textData.value = props.inputValue;
   textData.value === "" ? "" : validate();
 });
+
+const setFocus = (value) => {
+  emit("inputFocus", { value });
+};
 
 const setTextData = () => {
   setTimeout(() => {
@@ -119,74 +119,8 @@ const clearTextData = (value) => {
 };
 
 const validate = () => {
-  if (textData.value?.length === 0 && props.type !== "password") return;
-  switch (props.type) {
-    case "text":
-      textDataValid.value = textData.value.trim().length;
-      if (textDataValid.value === null || textDataValid.value === 0) {
-        showError.value = true;
-        errorMsg.value = "Field cannot be empty";
-        emit("valid", { type: props.name, value: false });
-      } else if (
-        textDataValid.value < props.minLength &&
-        props.name !== "companyName"
-      ) {
-        showError.value = true;
-        errorMsg.value = `At least ${props.minLengthLabel} characters`;
-        emit("valid", { type: props.name, value: false });
-      } else if (props.name === "website" || props.name === "website2") {
-        urlValidation();
-      } else if (textDataValid.value !== null && props.name === "password") {
-        passwordValidation();
-      } else {
-        emit("valid", { type: props.name, value: true });
-      }
-      break;
-
-    case "email":
-      textDataValid.value = emailValidation(textData.value);
-      if (textDataValid.value === null) {
-        showError.value = true;
-        errorMsg.value = "Email is invalid";
-        emit("valid", { type: "email", value: false });
-      } else {
-        emit("valid", { type: "email", value: true });
-      }
-      break;
-
-    case "number":
-      textDataValid.value = textData.value > props.maxNumber;
-      if (textDataValid.value === true && props.maxNumber !== null) {
-        showError.value = true;
-        errorMsg.value = `Max amount is ${props.maxNumber}`;
-        emit("valid", { type: "number", value: false });
-      } else {
-        emit("valid", { type: "number", value: true });
-      }
-      break;
-
-    case "password":
-      passwordValidation();
-      break;
-
-    default:
-      break;
-  }
-};
-
-const urlValidation = () => {
-  textDataValid.value = validateWebsite(textData.value);
-  if (!textDataValid.value) {
-    showError.value = true;
-    errorMsg.value = "Url is invalid";
-    emit("valid", { type: "website", value: false });
-  } else {
-    emit("valid", { type: "website", value: true });
-  }
-};
-
-const passwordValidation = () => {
   textDataValid.value = textData.value.trim().length;
+
   if (textDataValid.value === 0 && textData.value.length > 0) {
     emit("valid", { type: "passwordReset", value: false });
     emit("valid", { type: "password", value: false });
@@ -194,34 +128,47 @@ const passwordValidation = () => {
     errorMsg.value = "Password is invalid";
   } else if (textDataValid.value > 0 && props.validatePassword === true) {
     emit("valid", { type: "passwordReset", value: false });
+
     if (textData.value.length < 8) {
       showError.value = true;
       errorMsg.value = "minimum of eight characters";
+      hasEightOrMoreCharacters.value = false;
       emit("valid", { type: "hasEightOrMoreCharacters", value: false });
     } else {
+      hasEightOrMoreCharacters.value = true;
       emit("valid", { type: "hasEightOrMoreCharacters", value: true });
     }
+
     if (textData.value.search(/[a-z]/) == -1) {
       showError.value = true;
       errorMsg.value = "At least one lower case letter";
+      hasLowerCase.value = false;
       emit("valid", { type: "hasLowerCase", value: false });
     } else {
+      hasLowerCase.value = true;
       emit("valid", { type: "hasLowerCase", value: true });
     }
+
     if (textData.value.search(/[A-Z]/) == -1) {
       showError.value = true;
       errorMsg.value = "At least one upper case letter";
+      hasUpperCase.value = false;
       emit("valid", { type: "hasUpperCase", value: false });
     } else {
+      hasUpperCase.value = true;
       emit("valid", { type: "hasUpperCase", value: true });
     }
+
     if (textData.value.search(/[0-9]/) == -1) {
       showError.value = true;
       errorMsg.value = "At least one number";
+      hasNumber.value = false;
       emit("valid", { type: "hasNumber", value: false });
     } else {
+      hasNumber.value = true;
       emit("valid", { type: "hasNumber", value: true });
     }
+
     if (
       textData.value.search(
         /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).*$/
@@ -229,11 +176,13 @@ const passwordValidation = () => {
     ) {
       showError.value = true;
       errorMsg.value = "At least one special character";
+      hasSpecialCharacters.value = false;
       emit("valid", { type: "hasSpecialCharacters", value: false });
     } else {
+      hasSpecialCharacters.value = true;
       emit("valid", { type: "hasSpecialCharacters", value: true });
     }
-  } else if (textDataValid.value > 0 && props.passwordToConfirm.length > 0) {
+  } else if (textDataValid.value > 0 && props.name === "confirmPassword") {
     if (textData.value !== props.passwordToConfirm) {
       showError.value = true;
       errorMsg.value = "Password doesn't match";
@@ -250,6 +199,7 @@ const passwordValidation = () => {
 const setInput = () => {
   showError.value = false;
   errorMsg.value = "";
+  validate();
   emit("set", textData.value);
 };
 

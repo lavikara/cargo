@@ -5,9 +5,9 @@
   >
     <div class="left">
       <img
-        src="@/assets/img/logo.svg"
+        src="@/assets/img/CargoStationTempLogo.jpg"
         class="tw-h-[30px] tw-cursor-pointer tw-ml-8"
-        alt="tegs"
+        alt="cargo station"
         loading="lazy"
         @click="router.push({ name: 'Login' })"
       />
