@@ -134,7 +134,7 @@ const validate = () => {
         showError.value = true;
         errorMsg.value = `At least ${props.minLengthLabel} characters`;
         emit("valid", { type: props.name, value: false });
-      } else if (props.name === "website") {
+      } else if (props.name === "website" || props.name === "website2") {
         urlValidation();
       } else if (textDataValid.value !== null && props.name === "password") {
         passwordValidation();
