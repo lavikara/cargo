@@ -48,7 +48,7 @@
             ref="inviteLinkUrl"
             class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-transition-all tw-duration-300 focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1"
             type="text"
-            :value="inviteLink.teamInviteLink"
+            :value="inviteLink?.teamInviteLink"
             @focus="$event.target.select()"
           />
           <svg
