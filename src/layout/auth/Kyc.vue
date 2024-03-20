@@ -54,6 +54,8 @@
           type="text"
           :showLabel="true"
           :disabled="baseStore.btnLoading"
+          @set="setCompanyWebsite"
+          @valid="updateValidResult"
         />
 
         <TextInput
@@ -73,7 +75,10 @@
           <label for="team size" class="tw-font-medium tw-whitespace-nowrap">
             Team Size
           </label>
-          <div class="tw-flex tw-justify-between tw-mt-1">
+          <div
+            class="tw-relative tw-flex tw-justify-between tw-border tw-border-white tw-rounded-2xl tw-mt-1"
+            :class="{ '!tw-border-red ': teamSizeError }"
+          >
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
               :class="{
@@ -114,6 +119,12 @@
             >
               Above 30
             </div>
+            <p
+              v-if="teamSizeError"
+              class="tw-absolute tw-right-0 tw--bottom-4 tw-text-red tw-text-xs"
+            >
+              {{ teamSizeErrorText }}
+            </p>
           </div>
         </div>
         <SelectInput
@@ -191,6 +202,8 @@ const validResults = ref([
 ]);
 const formValid = ref(false);
 const stateInputDisabled = ref(true);
+const teamSizeError = ref(false);
+const teamSizeErrorText = ref("select team size");
 const payload = ref({});
 const teamSize = ref("");
 
@@ -217,6 +230,9 @@ const stateList = computed(() => {
 
 const addKyc = () => {
   setTimeout(async () => {
+    if (validResults.value[0].teamSize === false) {
+      teamSizeError.value = true;
+    }
     if (!formValid.value) return;
 
     const userId = route.params.userId;
@@ -244,6 +260,7 @@ const setTeamSize = (size) => {
   teamSize.value = size;
   payload.value.teamSize = size;
   validResults.value[0].teamSize = true;
+  teamSizeError.value = false;
   setFormValid();
 };
 
