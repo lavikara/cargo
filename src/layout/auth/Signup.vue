@@ -36,10 +36,65 @@
           :showLabel="true"
           :disabled="baseStore.btnLoading"
           @showPassword="showPassword"
+          @inputFocus="setFocus"
           @set="setPassword"
           @valid="updateValidResult"
         />
+        <transition
+          name="dropdown"
+          @enter="enter"
+          @after-enter="afterEnter"
+          @leave="leave"
+        >
+          <div v-show="passwordFocus" class="tw-grid tw-grid-cols-2 tw-gap-3">
+            <div class="tw-flex tw-items-center tw-gap-1 tw-pt-4">
+              <CheckBlueIcon v-if="validResults[0].hasEightOrMoreCharacters" />
+              <CloseRedIcon
+                v-if="!validResults[0].hasEightOrMoreCharacters"
+                fillColor="red"
+              />
+              <p class="tw-text-gray tw-text-xs">At least 8 characters</p>
+            </div>
+            <div class="tw-flex tw-items-center tw-gap-1 tw-pt-4">
+              <CheckBlueIcon v-if="validResults[0].hasNumber" />
+              <CloseRedIcon v-if="!validResults[0].hasNumber" fillColor="red" />
+              <p class="tw-text-gray tw-text-xs">At least one number</p>
+            </div>
 
+            <div class="tw-flex tw-items-center tw-gap-1">
+              <CheckBlueIcon v-if="validResults[0].hasUpperCase" />
+              <CloseRedIcon
+                v-if="!validResults[0].hasUpperCase"
+                fillColor="red"
+              />
+              <p class="tw-text-gray tw-text-xs">
+                At least one uppercase letter
+              </p>
+            </div>
+
+            <div class="tw-flex tw-items-center tw-gap-1">
+              <CheckBlueIcon v-if="validResults[0].hasSpecialCharacters" />
+              <CloseRedIcon
+                v-if="!validResults[0].hasSpecialCharacters"
+                fillColor="red"
+              />
+              <p class="tw-text-gray tw-text-xs">
+                At least one special character
+              </p>
+            </div>
+
+            <div class="tw-flex tw-items-center tw-gap-1">
+              <CheckBlueIcon v-if="validResults[0].hasLowerCase" />
+              <CloseRedIcon
+                v-if="!validResults[0].hasLowerCase"
+                fillColor="red"
+              />
+              <p class="tw-text-gray tw-text-xs">
+                At least one lowercase letter
+              </p>
+            </div>
+          </div>
+        </transition>
         <Btn
           class="tw-mt-8"
           title="Create Account"
@@ -67,6 +122,7 @@ import { useRouter } from "vue-router";
 import { useBaseStore } from "@/stores/baseStore.js";
 import { useAuthStore } from "@/stores/authStore.js";
 import CheckBlueIcon from "@/components/icons/CheckBlueIcon.vue";
+import CloseRedIcon from "@/components/icons/CloseRedIcon.vue";
 import TextInput from "@/components/general/TextInput.vue";
 import PasswordInput from "@/components/general/PasswordInput.vue";
 import Btn from "@/components/general/Btn.vue";
@@ -86,6 +142,7 @@ const validResults = ref([
   },
 ]);
 const formValid = ref(false);
+const passwordFocus = ref(false);
 const payload = ref({});
 const passwordInputType = ref("password");
 
@@ -95,6 +152,10 @@ const setEmail = (text) => {
 
 const setPassword = (text) => {
   payload.value.password = text;
+};
+
+const setFocus = (payload) => {
+  passwordFocus.value = payload.value;
 };
 
 const signup = () => {
@@ -170,6 +231,37 @@ const showPassword = (payload) => {
       break;
   }
 };
+
+const enter = (element) => {
+  element.style.height = "auto";
+  let height = getComputedStyle(element).height;
+  element.style.height = 0;
+  getComputedStyle(element);
+  setTimeout(() => {
+    element.style.height = height;
+  });
+};
+const afterEnter = (element) => {
+  element.style.height = "auto";
+};
+const leave = (element) => {
+  element.style.height = getComputedStyle(element).height;
+  getComputedStyle(element);
+  setTimeout(() => {
+    element.style.height = 0;
+  });
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: height 0.5s ease-in-out;
+  overflow: hidden;
+}
+.sidebar-menu-active {
+  background-color: #266644;
+  color: white;
+  border-color: white;
+}
+</style>
