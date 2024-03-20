@@ -45,7 +45,7 @@
           @set="setCompanyName"
           @valid="updateValidResult"
         />
-        <TextInput
+        <!-- <TextInput
           class="tw-mt-4"
           name="website"
           id="website"
@@ -56,7 +56,7 @@
           :disabled="baseStore.btnLoading"
           @set="setCompanyWebsite"
           @valid="updateValidResult"
-        />
+        /> -->
 
         <TextInput
           class="tw-mt-4"
