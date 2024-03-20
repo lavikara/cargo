@@ -77,7 +77,6 @@
           </label>
           <div
             class="tw-relative tw-flex tw-justify-between tw-border tw-border-white tw-rounded-2xl tw-mt-1"
-            :class="{ '!tw-border-red ': teamSizeError }"
           >
             <div
               class="tw-w-[6rem] tw-flex tw-justify-center tw-text-xs tw-border tw-border-gray tw-rounded-2xl tw-cursor-pointer hover:tw-border-blue tw-transition-all tw-duration-300 tw-py-3"
