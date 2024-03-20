@@ -6,10 +6,16 @@
       </label>
       <input
         class="tw-w-full tw-bg-white tw-border tw-border-gray-border tw-rounded-2xl tw-transition-all tw-duration-300 focus:tw-border-blue hover:tw-border-blue tw-px-4 tw-py-3 tw-mt-1"
-        :class="{ '!tw-border-red': showError, 'tw-pl-24': name === 'website' }"
+        :class="{
+          '!tw-border-red': showError,
+          'tw-pl-24': name === 'website',
+          '!tw-border-gray-border tw-cursor-not-allowed': disabled,
+        }"
         @keyup.enter="validate"
         @blur="validate"
         @input="setInput"
+        @focus="setFocus(true)"
+        @focusout="setFocus(false)"
         :type="type"
         :placeholder="placeHolder"
         :required="required"
@@ -17,8 +23,6 @@
         :id="id"
         :disabled="disabled"
         v-model="textData"
-        @focus="setFocus"
-        @focusout="setFocus"
       />
 
       <svg
@@ -51,53 +55,15 @@
         {{ errorMsg }}
       </p>
     </div>
-
-    <div
-      v-if="isFocused && textData.length"
-      class="tw-grid tw-grid-cols-2 tw-mt-5 tw-px-2 tw-gap-3"
-    >
-      <div class="tw-flex tw-items-center tw-gap-1">
-        <CheckBlueIcon v-if="hasEightOrMoreCharacters" />
-        <CloseWhiteIcon v-if="!hasEightOrMoreCharacters" fillColor="red" />
-        <p class="tw-text-gray tw-text-xs">At least 8 characters</p>
-      </div>
-
-      <div class="tw-flex tw-items-center tw-gap-1">
-        <CheckBlueIcon v-if="hasNumber" />
-        <CloseWhiteIcon v-if="!hasNumber" fillColor="red" />
-        <p class="tw-text-gray tw-text-xs">At least one number</p>
-      </div>
-
-      <div class="tw-flex tw-items-center tw-gap-1">
-        <CheckBlueIcon v-if="hasUpperCase" />
-        <CloseWhiteIcon v-if="!hasUpperCase" fillColor="red" />
-        <p class="tw-text-gray tw-text-xs">At least one uppercase letter</p>
-      </div>
-
-      <div class="tw-flex tw-items-center tw-gap-1">
-        <CheckBlueIcon v-if="hasSpecialCharacters" />
-        <CloseWhiteIcon v-if="!hasSpecialCharacters" fillColor="red" />
-        <p class="tw-text-gray tw-text-xs">At least one special character</p>
-      </div>
-
-      <div class="tw-flex tw-items-center tw-gap-1">
-        <CheckBlueIcon v-if="hasLowerCase" />
-        <CloseWhiteIcon v-if="!hasLowerCase" fillColor="red" />
-        <p class="tw-text-gray tw-text-xs">At least one lowercase letter</p>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, watchEffect, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import PlusGrayIcon from "@/components/icons/PlusGrayIcon.vue";
-import CheckBlueIcon from "@/components/icons/CheckBlueIcon.vue";
-import CloseWhiteIcon from "@/components/icons/CloseWhiteIcon.vue";
 
 const route = useRoute();
-const emit = defineEmits(["set", "valid", "showPassword"]);
+const emit = defineEmits(["set", "valid", "inputFocus", "showPassword"]);
 
 const props = defineProps({
   inputValue: { type: String, default: () => "" },
@@ -132,16 +98,14 @@ let hasNumber = ref(false);
 let hasSpecialCharacters = ref(false);
 let hasEightOrMoreCharacters = ref(false);
 
-let isFocused = ref(false);
-
-const setFocus = () => {
-  isFocused.value = !isFocused.value;
-};
-
 onMounted(() => {
   textData.value = props.inputValue;
   textData.value === "" ? "" : validate();
 });
+
+const setFocus = (value) => {
+  emit("inputFocus", { value });
+};
 
 const setTextData = () => {
   setTimeout(() => {
@@ -218,7 +182,7 @@ const validate = () => {
       hasSpecialCharacters.value = true;
       emit("valid", { type: "hasSpecialCharacters", value: true });
     }
-  } else if (textDataValid.value > 0 && props.passwordToConfirm.length > 0) {
+  } else if (textDataValid.value > 0 && props.name === "confirmPassword") {
     if (textData.value !== props.passwordToConfirm) {
       showError.value = true;
       errorMsg.value = "Password doesn't match";
