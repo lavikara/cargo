@@ -78,9 +78,8 @@ export const useAuthStore = defineStore({
       try {
         const response = await authApi.submitKyc(payload, userId);
         const { data } = response;
-        setItem("inviteLink", data?.updatedData?.teamInviteLink);
+        setItem("companyDetails", data?.updatedData);
         this.user = data?.user;
-
         baseStore.updateBtnLoadingState(false);
         router.push({
           name: "AddMember",
