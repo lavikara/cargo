@@ -74,13 +74,9 @@ const props = defineProps({
   placeHolder: { type: String, default: () => "" },
   label: { type: String, default: () => "" },
   background: { type: String, default: () => "" },
-  floatLabel: { type: Boolean, default: () => false },
   showLabel: { type: Boolean, default: () => false },
   clearTextData: { type: Boolean, default: () => false },
-  copy: { type: Boolean, default: () => false },
-  maxNumber: { type: Number, default: () => null },
   type: { type: String, default: () => "text", required: true },
-  orientation: { type: String, default: () => "colunm" },
   passwordToConfirm: { type: String, default: () => "" },
   validatePassword: { type: Boolean, default: () => false },
   readonly: { type: Boolean, default: () => false },
@@ -91,12 +87,6 @@ let textData = ref("");
 let textDataValid = ref();
 let showError = ref(false);
 let errorMsg = ref("");
-
-let hasLowerCase = ref(false);
-let hasUpperCase = ref(false);
-let hasNumber = ref(false);
-let hasSpecialCharacters = ref(false);
-let hasEightOrMoreCharacters = ref(false);
 
 onMounted(() => {
   textData.value = props.inputValue;
@@ -132,40 +122,32 @@ const validate = () => {
     if (textData.value.length < 8) {
       showError.value = true;
       errorMsg.value = "minimum of eight characters";
-      hasEightOrMoreCharacters.value = false;
       emit("valid", { type: "hasEightOrMoreCharacters", value: false });
     } else {
-      hasEightOrMoreCharacters.value = true;
       emit("valid", { type: "hasEightOrMoreCharacters", value: true });
     }
 
     if (textData.value.search(/[a-z]/) == -1) {
       showError.value = true;
       errorMsg.value = "At least one lower case letter";
-      hasLowerCase.value = false;
       emit("valid", { type: "hasLowerCase", value: false });
     } else {
-      hasLowerCase.value = true;
       emit("valid", { type: "hasLowerCase", value: true });
     }
 
     if (textData.value.search(/[A-Z]/) == -1) {
       showError.value = true;
       errorMsg.value = "At least one upper case letter";
-      hasUpperCase.value = false;
       emit("valid", { type: "hasUpperCase", value: false });
     } else {
-      hasUpperCase.value = true;
       emit("valid", { type: "hasUpperCase", value: true });
     }
 
     if (textData.value.search(/[0-9]/) == -1) {
       showError.value = true;
       errorMsg.value = "At least one number";
-      hasNumber.value = false;
       emit("valid", { type: "hasNumber", value: false });
     } else {
-      hasNumber.value = true;
       emit("valid", { type: "hasNumber", value: true });
     }
 
@@ -176,10 +158,8 @@ const validate = () => {
     ) {
       showError.value = true;
       errorMsg.value = "At least one special character";
-      hasSpecialCharacters.value = false;
       emit("valid", { type: "hasSpecialCharacters", value: false });
     } else {
-      hasSpecialCharacters.value = true;
       emit("valid", { type: "hasSpecialCharacters", value: true });
     }
   } else if (textDataValid.value > 0 && props.name === "confirmPassword") {

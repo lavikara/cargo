@@ -82,15 +82,11 @@ const props = defineProps({
   placeHolder: { type: String, default: () => "" },
   label: { type: String, default: () => "" },
   background: { type: String, default: () => "" },
-  floatLabel: { type: Boolean, default: () => false },
   showLabel: { type: Boolean, default: () => false },
   clearTextData: { type: Boolean, default: () => false },
   copy: { type: Boolean, default: () => false },
   maxNumber: { type: Number, default: () => null },
   type: { type: String, default: () => "text", required: true },
-  orientation: { type: String, default: () => "colunm" },
-  passwordToConfirm: { type: String, default: () => "" },
-  validatePassword: { type: Boolean, default: () => false },
   readonly: { type: Boolean, default: () => false },
   disabled: { type: Boolean, default: () => false },
   minLength: { type: Number, default: () => 2 },
@@ -136,8 +132,6 @@ const validate = () => {
         emit("valid", { type: props.name, value: false });
       } else if (props.name === "website" || props.name === "website2") {
         urlValidation();
-      } else if (textDataValid.value !== null && props.name === "password") {
-        passwordValidation();
       } else {
         emit("valid", { type: props.name, value: true });
       }
@@ -165,10 +159,6 @@ const validate = () => {
       }
       break;
 
-    case "password":
-      passwordValidation();
-      break;
-
     default:
       break;
   }
@@ -182,68 +172,6 @@ const urlValidation = () => {
     emit("valid", { type: "website", value: false });
   } else {
     emit("valid", { type: "website", value: true });
-  }
-};
-
-const passwordValidation = () => {
-  textDataValid.value = textData.value.trim().length;
-  if (textDataValid.value === 0 && textData.value.length > 0) {
-    emit("valid", { type: "passwordReset", value: false });
-    emit("valid", { type: "password", value: false });
-    showError.value = true;
-    errorMsg.value = "Password is invalid";
-  } else if (textDataValid.value > 0 && props.validatePassword === true) {
-    emit("valid", { type: "passwordReset", value: false });
-    if (textData.value.length < 8) {
-      showError.value = true;
-      errorMsg.value = "minimum of eight characters";
-      emit("valid", { type: "hasEightOrMoreCharacters", value: false });
-    } else {
-      emit("valid", { type: "hasEightOrMoreCharacters", value: true });
-    }
-    if (textData.value.search(/[a-z]/) == -1) {
-      showError.value = true;
-      errorMsg.value = "At least one lower case letter";
-      emit("valid", { type: "hasLowerCase", value: false });
-    } else {
-      emit("valid", { type: "hasLowerCase", value: true });
-    }
-    if (textData.value.search(/[A-Z]/) == -1) {
-      showError.value = true;
-      errorMsg.value = "At least one upper case letter";
-      emit("valid", { type: "hasUpperCase", value: false });
-    } else {
-      emit("valid", { type: "hasUpperCase", value: true });
-    }
-    if (textData.value.search(/[0-9]/) == -1) {
-      showError.value = true;
-      errorMsg.value = "At least one number";
-      emit("valid", { type: "hasNumber", value: false });
-    } else {
-      emit("valid", { type: "hasNumber", value: true });
-    }
-    if (
-      textData.value.search(
-        /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).*$/
-      ) == -1
-    ) {
-      showError.value = true;
-      errorMsg.value = "At least one special character";
-      emit("valid", { type: "hasSpecialCharacters", value: false });
-    } else {
-      emit("valid", { type: "hasSpecialCharacters", value: true });
-    }
-  } else if (textDataValid.value > 0 && props.passwordToConfirm.length > 0) {
-    if (textData.value !== props.passwordToConfirm) {
-      showError.value = true;
-      errorMsg.value = "Password doesn't match";
-      emit("valid", { type: "passwordMatch", value: false });
-    } else {
-      emit("valid", { type: "passwordMatch", value: true });
-    }
-  } else {
-    emit("valid", { type: "passwordReset", value: false });
-    emit("valid", { type: "password", value: false });
   }
 };
 

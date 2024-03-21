@@ -60,7 +60,6 @@ const props = defineProps({
   required: { type: Boolean, default: () => true },
   readonly: { type: Boolean, default: () => false },
   disabled: { type: Boolean, default: () => false },
-  floatLabel: { type: Boolean, default: () => false },
   clearOption: { type: Boolean, default: () => false },
   tableHeader: { type: Boolean, default: () => false },
   appearance: { type: Boolean, default: () => false },
