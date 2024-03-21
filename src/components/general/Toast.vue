@@ -13,15 +13,23 @@
         class="tw-flex tw-flex-col tw-justify-start tw-items-start tw-bg-white tw-rounded tw-shadow-sm tw-text-black-light tw-px-4 tw-py-2"
       >
         <div class="tw-flex tw-items-center tw-w-full">
-          <!-- <SuccessIcon v-show="baseStore.toast.type == 'success'" /> -->
-          <!-- <ErrorIcon v-show="baseStore.toast.type == 'error'" /> -->
-          <!-- <img
-            v-show="baseStore.toast.type == 'info'"
-            src="~@/assets/img/deleteicon.svg"
+          <img
+            v-show="baseStore.toast.type === 'success'"
+            src="@/assets/img/noti-success.svg"
+            alt="success icon"
+          />
+          <img
+            v-show="baseStore.toast.type === 'error'"
+            src="@/assets/img/noti-error.svg"
+            alt="error icon"
+          />
+          <img
+            v-show="baseStore.toast.type === 'info'"
+            src="@/assets/img/noti-info.svg"
             alt="info icon"
-          /> -->
+          />
           <div class="tw-w-full tw-flex tw-justify-between tw-items-center">
-            <h3 class="tw-text-xl tw-text-black tw-ml-3">
+            <h3 class="tw-text-xl tw-text-black tw-ml-2">
               {{ capitalize(baseStore.toast.type) }}
             </h3>
             <img
@@ -33,7 +41,7 @@
           </div>
         </div>
         <div class="tw-w-full">
-          <p class="tw-text-base tw-text-black-light tw-ml-[2.2rem]">
+          <p class="tw-text-base tw-text-black-light tw-ml-6">
             {{ baseStore.toast.description }}
           </p>
         </div>
